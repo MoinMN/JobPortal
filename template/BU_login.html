@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log In</title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container{
+            padding: 12px;
+            height: 60%;
+            width: 30%;
+            border-radius: 15px;
+            border: 1px solid black;
+            /* box-shadow: 0px 0px 50px rgb(231, 227, 227); */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            /* gap: 2em; */
+        }
+        
+        .container h1{
+            font-size: 3rem;
+            text-align: center;
+        }
+        
+        .container form{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 90%;
+            height: 50%;
+            gap: 1.5em;
+        }
+
+        .container form input{
+            padding: 8px;
+            font-size: 1rem;
+            border-radius: 5px;
+            border: 1px solid black;
+            width: 80%;
+        }
+        
+        .container form input::placeholder{
+            font-size: 1rem;
+
+        }
+
+        .container form button{
+            padding: 4px;
+            font-size: 1rem;
+            border-radius: 5px;
+            width: 50%;
+            background-image: linear-gradient(to top left, rgb(0, 198, 0), greenyellow);
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Log In</h1>
+        <form method="POST">
+            {% csrf_token %}
+            <input type="text" name="username" placeholder="Username">
+            <input type="password" name="password" placeholder="Password">
+            <button type="submit">Log In</button>
+        </form>
+        <p><a href="signup">Create a account</a></p>
+    </div>
+</body>
+</html>
