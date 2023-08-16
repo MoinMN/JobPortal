@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile | Job Portal</title>
+</head>
+<body>    
+    <h1>User Profile</h1>
+    <!-- Display Hirer profile fields -->
+    {% if user_hirer %}
+    <p>Username: {{ user_hirer.user.username }}</p>
+    <p>Name: {{ user_hirer.user.first_name }} {{ user_hirer.user.last_name }}</p>
+    <p>Phone Number: {{ user_hirer.phone_number }}</p>
+    <p>Designation: {{ user_hirer.designation }}</p>
+
+    <!-- Display Job Seeker profile fields -->
+    {% elif user_job_seeker %}
+    <p>Username: {{ user_job_seeker.user.username }}</p>
+    <p>Name: {{ user_job_seeker.user.first_name }} {{ user_job_seeker.user.last_name }}</p>
+    <p>Phone Number: {{ user_job_seeker.phone_number }}</p>
+    <p>Location: {{ user_job_seeker.location }}</p>
+    
+    <!-- Display other profile fields -->
+    {% else %}
+    <p>No profile data available.</p>
+    {% endif %}
+    <span>Back to <a href="../">Home</a></span>
+</body>
+</html>

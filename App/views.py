@@ -1,4 +1,4 @@
-from django.contrib.auth import login, logout,authenticate
+from django.contrib.auth import login, logout, authenticate
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.views.generic import CreateView
@@ -39,7 +39,7 @@ def login_request(request):
             user = authenticate(username=username, password=password)
             if user is not None :
                 login(request,user)
-                return redirect('/home')
+                return redirect('/')
             else:
                 messages.error(request,"Invalid username or password")
         else:
@@ -50,90 +50,3 @@ def login_request(request):
 def logout_view(request):
     logout(request)
     return redirect('../login/')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# from django.shortcuts import redirect, render, HttpResponse
-# from django.contrib.auth.models import User
-# from django.contrib.auth import authenticate, login, logout
-# from django.contrib.auth.decorators import login_required
-
-
-# # Create your views here.
-# @login_required(login_url='login')
-# def homePage(request):
-#     return render(request, 'index.html')
-
-
-# def logInPage(request):
-#     if request.method == 'POST':
-#         login_username = request.POST.get('username')
-#         login_password = request.POST.get('password')
-
-#         user = authenticate(request, username=login_username, password=login_password)
-#         if user is not None:
-#             login(request, user)
-#             return redirect('home')
-#         else:
-#             return HttpResponse("Username password is incorrect!!!")
-#     return render(request, 'login.html')
-
-
-# def signUpPage(request):
-#     if request.method == 'POST':
-#         username = request.POST.get('username')
-#         usertype = request.POST.get('usertype')
-#         email = request.POST.get('email')
-#         password = request.POST.get('password')
-#         cnf_password = request.POST.get('cnf-password')
-
-#         if password != cnf_password:
-#             return HttpResponse("You Password and confirm was not same")
-#         else:
-#             my_user = User.objects.create_user(username, email, password)
-#             my_user.save()
-#             return redirect('login')
-#     return render(request, 'sign-up.html')
-
-
-# def logOutPage(request):
-#     logout(request)
-#     return redirect('login')
