@@ -10,6 +10,7 @@ class User(AbstractUser):
 
 class Job_Seeker(models.Model):
     user = models.OneToOneField(User, on_delete = models.CASCADE, primary_key = True)
+    email = models.CharField(max_length=30)
     phone_number = models.CharField(max_length=20)
     location = models.CharField(max_length=20)
 
@@ -18,6 +19,7 @@ class Job_Seeker(models.Model):
 
 class Hirer(models.Model):
     user = models.OneToOneField(User, on_delete = models.CASCADE, primary_key = True)
+    email = models.CharField(max_length=30)
     phone_number = models.CharField(max_length=20)
     designation = models.CharField(max_length=20)
     
