@@ -5,6 +5,8 @@ from django.views.generic import CreateView
 from .form import JobSeekerSignUpForm, HirerSignUpForm
 from django.contrib.auth.forms import AuthenticationForm
 from .models import User
+from App.models import Hirer, Job_Seeker
+from django.contrib.auth.decorators import login_required
 
 def register(request):
     return render(request, 'register.html')
@@ -49,3 +51,19 @@ def login_request(request):
 def logout_view(request):
     logout(request)
     return redirect('../login/')
+
+
+@login_required(login_url='../login')
+def profile(request):
+    if request.user.is_jobseeker:
+        user_job_seeker = Job_Seeker.objects.get(user=request.user)
+        context = {
+            'user_job_seeker': user_job_seeker
+        }
+    if request.user.is_hirer:
+        user_hirer = Hirer.objects.get(user=request.user)
+        context = {
+            'user_hirer': user_hirer
+        }    
+        
+    return render(request, 'profile.html', context)

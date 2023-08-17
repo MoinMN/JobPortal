@@ -24,4 +24,5 @@ urlpatterns = [
     path('hirer_register/',views.hirer_register.as_view(), name='hirer_register'),
     path('login/',views.login_request, name='login'),
     path('logout/',views.logout_view, name='logout'),
+    path('profile/',views.profile, name='profile'),
 ]
