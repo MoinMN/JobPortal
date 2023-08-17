@@ -1,30 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile | Job Portal</title>
+    <title>
+        {% if user_hirer %}
+        {{ user_hirer.user.last_name }}
+        {% elif user_job_seeker %}
+        {{ user_job_seeker.user.last_name }}
+        {% else %}
+        Profile
+        {% endif %}
+        | Job Portal
+    </title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
 </head>
-<body>    
-    <h1>User Profile</h1>
-    <!-- Display Hirer profile fields -->
-    {% if user_hirer %}
-    <p>Username: {{ user_hirer.user.username }}</p>
-    <p>Name: {{ user_hirer.user.first_name }} {{ user_hirer.user.last_name }}</p>
-    <p>Phone Number: {{ user_hirer.phone_number }}</p>
-    <p>Designation: {{ user_hirer.designation }}</p>
 
-    <!-- Display Job Seeker profile fields -->
-    {% elif user_job_seeker %}
-    <p>Username: {{ user_job_seeker.user.username }}</p>
-    <p>Name: {{ user_job_seeker.user.first_name }} {{ user_job_seeker.user.last_name }}</p>
-    <p>Phone Number: {{ user_job_seeker.phone_number }}</p>
-    <p>Location: {{ user_job_seeker.location }}</p>
-    
-    <!-- Display other profile fields -->
-    {% else %}
-    <p>No profile data available.</p>
-    {% endif %}
-    <span>Back to <a href="../">Home</a></span>
+<body>
+    <div class="container">
+        <h1>User Profile</h1>
+
+        <!-- Display Hirer profile fields -->
+        {% if user_hirer %}
+        <div class="item">
+            <label for="id_username">Username:</label>
+            <input type="text" name="username" id="id_username" value="{{ user_hirer.user.username }}" readonly>
+        </div>
+        <div class="item">
+            <label for="id_first_name">First Name:</label>
+            <input type="text" name="first_name" id="id_first_name" value="{{ user_hirer.user.first_name }}" readonly>
+        </div>
+        <div class="item">
+            <label for="second_name">Second Name:</label>
+            <input type="text" name="second_name" id="second_name" value="{{ user_hirer.user.last_name }}" readonly>
+        </div>
+        <div class="item">
+            <label for="id_email">Email:</label>
+            <input type="text" name="email" id="id_email" value="{{ user_hirer.email }}" readonly>
+        </div>
+        <div class="item">
+            <label for="id_phone_number">Phone Number:</label>
+            <input type="text" name="phone_number" id="id_phone_number" value="{{ user_hirer.phone_number }}" readonly>
+        </div>
+        <div class="item">
+            <label for="id_designation">Designation:</label>
+            <input type="text" name="designation" id="id_designation" value="{{ user_hirer.designation }}" readonly>
+        </div>
+
+
+        <!-- Display Job Seeker profile fields -->
+        {% elif user_job_seeker %}
+        <p>Username: {{ user_job_seeker.user.username }}</p>
+        <p>Name: {{ user_job_seeker.user.first_name }} {{ user_job_seeker.user.last_name }}</p>
+        <p>Email: {{ user_job_seeker.email }}</p>
+        <p>Phone Number: {{ user_job_seeker.phone_number }}</p>
+        <p>Location: {{ user_job_seeker.location }}</p>
+
+        <!-- Display other profile fields -->
+        {% else %}
+        <p>No profile data available.</p>
+        {% endif %}
+
+        <div class="btn">
+            <button id="edit">Edit</button>
+            <a href="../"><button>Home</button></a>
+        </div>
+    </div>
+
+
+    <script>
+        let btn = document.getElementById('edit');
+        let items = document.querySelectorAll('.item');
+        
+        btn.addEventListener('click', ()=>{
+            if(btn.innerText == 'Save'){
+                items.forEach((item)=>{
+                    item.querySelector('input').readOnly = true;
+                    item.querySelector('input').style.border = 'none';
+                    btn.innerText = "Edit";
+                });
+            }
+            else{
+                items.forEach((item)=>{
+                    item.querySelector('input').readOnly = false;
+                    console.log(item.querySelector('input').readOnly)
+                    item.querySelector('input').style.border = '2px solid black';
+                    btn.innerText = "Save";
+                });
+            }
+            
+        });
+    </script>
 </body>
+
 </html>
