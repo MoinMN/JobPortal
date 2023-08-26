@@ -1,5 +1,5 @@
 from django.contrib.auth import login, logout, authenticate
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404, HttpResponseRedirect
 from django.contrib import messages
 from django.views.generic import CreateView
 from .form import JobSeekerSignUpForm, HirerSignUpForm
@@ -18,7 +18,7 @@ class job_seeker_register(CreateView):
 
     def form_valid(self, form):
         user = form.save()
-        login(self.request, user)
+        # login(self.request, user)
         return redirect('../login/')
 
 class hirer_register(CreateView):
@@ -28,7 +28,7 @@ class hirer_register(CreateView):
 
     def form_valid(self, form):
         user = form.save()
-        login(self.request, user)
+        # login(self.request, user)
         return redirect('../login')
 
 
@@ -60,10 +60,92 @@ def profile(request):
         context = {
             'user_job_seeker': user_job_seeker
         }
+
     if request.user.is_hirer:
         user_hirer = Hirer.objects.get(user=request.user)
+        # Hirer.objects.update()
         context = {
             'user_hirer': user_hirer
-        }    
-        
+        }
+
     return render(request, 'profile.html', context)
+
+@login_required(login_url='../login')
+def update_profile(request):
+    if request.user.is_jobseeker:
+        user_job_seeker = Job_Seeker.objects.get(user=request.user)
+        context = {
+            'user_job_seeker': user_job_seeker
+        }
+
+        if request.method == 'POST':                      
+            username = request.POST['username']
+            first_name = request.POST['first_name']
+            last_name = request.POST['last_name']
+            email = request.POST['email']
+            phone_number = request.POST['phone_number']
+            location = request.POST['location']
+
+            user_job_seeker = Job_Seeker.objects.get(user=request.user)
+
+
+            user_job_seeker.user.first_name = first_name
+            user_job_seeker.user.last_name = last_name
+            user_job_seeker.email = email
+            user_job_seeker.phone_number = phone_number
+            user_job_seeker.location = location
+
+            user_job_seeker.save()
+
+            if User.objects.filter(username=username).exists() and username!=request.user.username:
+                context = {
+                    'user_job_seeker': user_job_seeker,
+                    'error': "Username Already Exist"
+                }
+                return render(request, 'update_profile.html', context)
+            else:
+                pass
+            user_job_seeker.user.username = username
+            user_job_seeker.user.save()
+            return redirect('../profile') 
+
+    if request.user.is_hirer:
+        user_hirer = Hirer.objects.get(user=request.user)
+        # Hirer.objects.update()
+        context = {
+            'user_hirer': user_hirer
+        }
+
+        if request.method == 'POST':
+            username = request.POST['username']
+            first_name = request.POST['first_name']
+            last_name = request.POST['last_name']
+            email = request.POST['email']
+            phone_number = request.POST['phone_number']
+            designation = request.POST['designation']
+
+            user_hirer = Hirer.objects.get(user=request.user)
+
+
+            user_hirer.user.first_name = first_name
+            user_hirer.user.last_name = last_name
+            user_hirer.email = email
+            user_hirer.phone_number = phone_number
+            user_hirer.designation = designation
+
+            user_hirer.save()
+
+            if User.objects.filter(username=username).exists():
+                context = {
+                    'user_hirer': user_hirer,
+                    'error': "Username Already Exist"
+                }
+                return render(request, 'update_profile.html', context)
+            else:
+                user_hirer.user.username = username
+            
+            user_hirer.user.save()
+            return redirect('../profile') 
+
+    return render(request, 'update_profile.html', context)
+    

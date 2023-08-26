@@ -25,38 +25,74 @@
         <!-- Display Hirer profile fields -->
         {% if user_hirer %}
         <div class="item">
-            <label for="id_username">Username:</label>
-            <input type="text" name="username" id="id_username" value="{{ user_hirer.user.username }}" readonly>
+            <label for="id_username_hirer">Username:</label>
+            <input type="text" name="username" id="id_username_hirer" value="{{ user_hirer.user.username }}" readonly>
+            <div>
+                {% if error %}
+                <br><span style="color: red;">{{ error }}</span>
+                {% endif %}
+            </div>
         </div>
         <div class="item">
-            <label for="id_first_name">First Name:</label>
-            <input type="text" name="first_name" id="id_first_name" value="{{ user_hirer.user.first_name }}" readonly>
+            <label for="id_first_name_hirer">First Name:</label>
+            <input type="text" name="first_name" id="id_first_name_hirer" value="{{ user_hirer.user.first_name }}"
+                readonly>
         </div>
         <div class="item">
-            <label for="second_name">Second Name:</label>
-            <input type="text" name="second_name" id="second_name" value="{{ user_hirer.user.last_name }}" readonly>
+            <label for="last_name_hirer">Second Name:</label>
+            <input type="text" name="last_name" id="last_name_hirer" value="{{ user_hirer.user.last_name }}" readonly>
         </div>
         <div class="item">
-            <label for="id_email">Email:</label>
-            <input type="text" name="email" id="id_email" value="{{ user_hirer.email }}" readonly>
+            <label for="id_email_hirer">Email:</label>
+            <input type="text" name="email" id="id_email_hirer" value="{{ user_hirer.email }}" readonly>
         </div>
         <div class="item">
-            <label for="id_phone_number">Phone Number:</label>
-            <input type="text" name="phone_number" id="id_phone_number" value="{{ user_hirer.phone_number }}" readonly>
+            <label for="id_phone_number_hirer">Phone Number:</label>
+            <input type="text" name="phone_number" id="id_phone_number_hirer" value="{{ user_hirer.phone_number }}"
+                readonly>
         </div>
         <div class="item">
-            <label for="id_designation">Designation:</label>
-            <input type="text" name="designation" id="id_designation" value="{{ user_hirer.designation }}" readonly>
+            <label for="id_designation_hirer">Designation:</label>
+            <input type="text" name="designation" id="id_designation_hirer" value="{{ user_hirer.designation }}"
+                readonly>
         </div>
+        <button id="sub" type="submit" style="display: none;">Save</button>
 
 
         <!-- Display Job Seeker profile fields -->
         {% elif user_job_seeker %}
-        <p>Username: {{ user_job_seeker.user.username }}</p>
-        <p>Name: {{ user_job_seeker.user.first_name }} {{ user_job_seeker.user.last_name }}</p>
-        <p>Email: {{ user_job_seeker.email }}</p>
-        <p>Phone Number: {{ user_job_seeker.phone_number }}</p>
-        <p>Location: {{ user_job_seeker.location }}</p>
+        <div class="item">
+            <label for="id_username">Username:</label>
+            <input type="text" name="username" id="id_username" value="{{ user_job_seeker.user.username }}" readonly>
+            <div>
+                {% if error %}
+                <br><span style="color: red;">{{ error }}</span>
+                {% endif %}
+            </div>
+        </div>
+        <div class="item">
+            <label for="id_first_name">First Name:</label>
+            <input type="text" name="first_name" id="id_first_name" value="{{ user_job_seeker.user.first_name }}"
+                readonly>
+        </div>
+        <div class="item">
+            <label for="last_name">Second Name:</label>
+            <input type="text" name="last_name" id="last_name" value="{{ user_job_seeker.user.last_name }}" readonly>
+        </div>
+        <div class="item">
+            <label for="id_email">Email:</label>
+            <input type="text" name="email" id="id_email" value="{{ user_job_seeker.email }}" readonly>
+        </div>
+        <div class="item">
+            <label for="id_phone_number">Phone Number:</label>
+            <input type="text" name="phone_number" id="id_phone_number" value="{{ user_job_seeker.phone_number }}"
+                readonly>
+        </div>
+        <div class="item">
+            <label for="id_location">Location:</label>
+            <input type="text" name="location" id="id_location" value="{{ user_job_seeker.location }}" readonly>
+        </div>
+        <button id="sub" type="submit" style="display: none;">Save</button>
 
         <!-- Display other profile fields -->
         {% else %}
@@ -64,35 +100,10 @@
         {% endif %}
 
         <div class="btn">
-            <button id="edit">Edit</button>
+            <a href="../update_profile"><button>Edit</button></a>
             <a href="../../"><button>Home</button></a>
         </div>
     </div>
-
-
-    <script>
-        let btn = document.getElementById('edit');
-        let items = document.querySelectorAll('.item');
-        
-        btn.addEventListener('click', ()=>{
-            if(btn.innerText == 'Save'){
-                items.forEach((item)=>{
-                    item.querySelector('input').readOnly = true;
-                    item.querySelector('input').style.border = 'none';
-                    btn.innerText = "Edit";
-                });
-            }
-            else{
-                items.forEach((item)=>{
-                    item.querySelector('input').readOnly = false;
-                    console.log(item.querySelector('input').readOnly)
-                    item.querySelector('input').style.border = '2px solid black';
-                    btn.innerText = "Save";
-                });
-            }
-            
-        });
-    </script>
 </body>
 
 </html>

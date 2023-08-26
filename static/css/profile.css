@@ -26,6 +26,7 @@ body{
 }
 
 .container .item{
+    display: flex;
     font-size: 1.2rem;
     padding: 0 20px;
     padding: 15px;
@@ -34,9 +35,8 @@ body{
 .container .item input{
     background-color: transparent;
     border: none;
-    outline: none;
     padding: 1px 8px;
-    border-radius: 12px;
+    border-radius: 8px;
     font-size: 1.2rem;
 }
 

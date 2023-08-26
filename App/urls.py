@@ -17,6 +17,7 @@ Including another URLconf
 # from django.contrib import admin
 from django.urls import path
 from . import views
+from .models import User
 
 urlpatterns = [
     path('',views.register, name='register'),
@@ -25,4 +26,6 @@ urlpatterns = [
     path('login/',views.login_request, name='login'),
     path('logout/',views.logout_view, name='logout'),
     path('profile/',views.profile, name='profile'),
+    path('update_profile/',views.update_profile, name='update_profile'),
+    # path('profile/<str:username>/',views.profile, name='profile'),
 ]
