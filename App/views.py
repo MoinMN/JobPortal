@@ -103,8 +103,8 @@ def update_profile(request):
                     'error': "Username Already Exist"
                 }
                 return render(request, 'update_profile.html', context)
-            else:
-                pass
+            
+
             user_job_seeker.user.username = username
             user_job_seeker.user.save()
             return redirect('../profile') 
@@ -135,16 +135,17 @@ def update_profile(request):
 
             user_hirer.save()
 
-            if User.objects.filter(username=username).exists():
+            if User.objects.filter(username=username).exists() and username!=request.user.username:
                 context = {
                     'user_hirer': user_hirer,
                     'error': "Username Already Exist"
                 }
                 return render(request, 'update_profile.html', context)
-            else:
-                user_hirer.user.username = username
             
+            
+            user_hirer.user.username = username            
             user_hirer.user.save()
+
             return redirect('../profile') 
 
     return render(request, 'update_profile.html', context)

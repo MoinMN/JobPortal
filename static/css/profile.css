@@ -35,6 +35,7 @@ body{
 .container .item input{
     background-color: transparent;
     border: none;
+    outline: none;
     padding: 1px 8px;
     border-radius: 8px;
     font-size: 1.2rem;
