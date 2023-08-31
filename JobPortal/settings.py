@@ -33,14 +33,15 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'django.contrib.admin',
-    'pages.apps.PagesConfig',
-    'widget_tweaks',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
+    'pages.apps.PagesConfig',
     'App.apps.AppConfig',
+    'widget_tweaks',
 ]
 
 MIDDLEWARE = [

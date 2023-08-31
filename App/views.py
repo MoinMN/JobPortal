@@ -8,6 +8,10 @@ from .models import User
 from App.models import Hirer, Job_Seeker
 from django.contrib.auth.decorators import login_required
 
+
+
+from django.contrib.auth.forms import UserCreationForm
+
 def register(request):
     return render(request, 'register.html')
 
@@ -20,6 +24,8 @@ class job_seeker_register(CreateView):
         user = form.save()
         # login(self.request, user)
         return redirect('../login/')
+
+
 
 class hirer_register(CreateView):
     model = User
@@ -88,11 +94,10 @@ def update_profile(request):
 
             user_job_seeker = Job_Seeker.objects.get(user=request.user)
 
-
             user_job_seeker.user.first_name = first_name
             user_job_seeker.user.last_name = last_name
-            user_job_seeker.email = email
-            user_job_seeker.phone_number = phone_number
+            user_job_seeker.user.email = email
+            user_job_seeker.user.phone_number = phone_number
             user_job_seeker.location = location
 
             user_job_seeker.save()
@@ -126,11 +131,10 @@ def update_profile(request):
 
             user_hirer = Hirer.objects.get(user=request.user)
 
-
             user_hirer.user.first_name = first_name
             user_hirer.user.last_name = last_name
-            user_hirer.email = email
-            user_hirer.phone_number = phone_number
+            user_hirer.user.email = email
+            user_hirer.user.phone_number = phone_number
             user_hirer.designation = designation
 
             user_hirer.save()
@@ -141,7 +145,7 @@ def update_profile(request):
                     'error': "Username Already Exist"
                 }
                 return render(request, 'update_profile.html', context)
-            
+                        
             
             user_hirer.user.username = username            
             user_hirer.user.save()
@@ -150,3 +154,5 @@ def update_profile(request):
 
     return render(request, 'update_profile.html', context)
     
+
+

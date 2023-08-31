@@ -50,11 +50,11 @@
         </div>
         <div class="item">
             <label for="id_email_hirer">Email:</label>
-            <input type="text" name="email" id="id_email_hirer" value="{{ user_hirer.email }}" readonly>
+            <input type="text" name="email" id="id_email_hirer" value="{{ user_hirer.user.email }}" readonly>
         </div>
         <div class="item">
             <label for="id_phone_number_hirer">Phone Number:</label>
-            <input type="text" name="phone_number" id="id_phone_number_hirer" value="{{ user_hirer.phone_number }}"
+            <input type="text" name="phone_number" id="id_phone_number_hirer" value="{{ user_hirer.user.phone_number }}"
                 readonly>
         </div>
         <div class="item">
@@ -87,11 +87,11 @@
         </div>
         <div class="item">
             <label for="id_email">Email:</label>
-            <input type="text" name="email" id="id_email" value="{{ user_job_seeker.email }}" readonly>
+            <input type="text" name="email" id="id_email" value="{{ user_job_seeker.user.email }}" readonly>
         </div>
         <div class="item">
             <label for="id_phone_number">Phone Number:</label>
-            <input type="text" name="phone_number" id="id_phone_number" value="{{ user_job_seeker.phone_number }}"
+            <input type="text" name="phone_number" id="id_phone_number" value="{{ user_job_seeker.user.phone_number }}"
                 readonly>
         </div>
         <div class="item">
@@ -106,8 +106,8 @@
         {% endif %}
 
         <div class="btn">
-            <a href="../update_profile"><button>Edit</button></a>
-            <a href="../../"><button>Home</button></a>
+            <a href="{% url 'update_profile' %}"><button>Edit</button></a>
+            <a href="{% url 'home' %}"><button>Home</button></a>
         </div>
     </div>
 </body>
