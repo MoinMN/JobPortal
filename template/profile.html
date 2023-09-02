@@ -40,14 +40,18 @@
             </div>
         </div>
         <div class="item">
-            <label for="id_first_name_hirer">First Name:</label>
-            <input type="text" name="first_name" id="id_first_name_hirer" value="{{ user_hirer.user.first_name }}"
+            <label for="id_name_hirer">Name:</label>
+            <input type="text" name="name" id="id_name_hirer" value="{{ user_hirer.user.name }}"
                 readonly>
         </div>
-        <div class="item">
+
+        {% comment %}  
+        <!-- <div class="item">
             <label for="last_name_hirer">Second Name:</label>
             <input type="text" name="last_name" id="last_name_hirer" value="{{ user_hirer.user.last_name }}" readonly>
-        </div>
+        </div> -->
+        {% endcomment %}
+
         <div class="item">
             <label for="id_email_hirer">Email:</label>
             <input type="text" name="email" id="id_email_hirer" value="{{ user_hirer.user.email }}" readonly>
@@ -55,11 +59,6 @@
         <div class="item">
             <label for="id_phone_number_hirer">Phone Number:</label>
             <input type="text" name="phone_number" id="id_phone_number_hirer" value="{{ user_hirer.user.phone_number }}"
-                readonly>
-        </div>
-        <div class="item">
-            <label for="id_designation_hirer">Designation:</label>
-            <input type="text" name="designation" id="id_designation_hirer" value="{{ user_hirer.designation }}"
                 readonly>
         </div>
         <button id="sub" type="submit" style="display: none;">Save</button>
@@ -77,14 +76,18 @@
             </div>
         </div>
         <div class="item">
-            <label for="id_first_name">First Name:</label>
-            <input type="text" name="first_name" id="id_first_name" value="{{ user_job_seeker.user.first_name }}"
+            <label for="id_name">Name:</label>
+            <input type="text" name="name" id="id_name" value="{{ user_job_seeker.user.name }}"
                 readonly>
         </div>
-        <div class="item">
+
+        {% comment %}  
+        <!-- <div class="item">
             <label for="last_name">Second Name:</label>
             <input type="text" name="last_name" id="last_name" value="{{ user_job_seeker.user.last_name }}" readonly>
-        </div>
+        </div> -->
+        {% endcomment %}
+
         <div class="item">
             <label for="id_email">Email:</label>
             <input type="text" name="email" id="id_email" value="{{ user_job_seeker.user.email }}" readonly>
@@ -93,10 +96,6 @@
             <label for="id_phone_number">Phone Number:</label>
             <input type="text" name="phone_number" id="id_phone_number" value="{{ user_job_seeker.user.phone_number }}"
                 readonly>
-        </div>
-        <div class="item">
-            <label for="id_location">Location:</label>
-            <input type="text" name="location" id="id_location" value="{{ user_job_seeker.location }}" readonly>
         </div>
         <button id="sub" type="submit" style="display: none;">Save</button>
 

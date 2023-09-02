@@ -5,12 +5,13 @@ from django.views.generic import CreateView
 from .form import JobSeekerSignUpForm, HirerSignUpForm
 from django.contrib.auth.forms import AuthenticationForm
 from .models import User
-from App.models import Hirer, Job_Seeker
+from App.models import Hirer, JobSeeker
 from django.contrib.auth.decorators import login_required
 
 
-
 from django.contrib.auth.forms import UserCreationForm
+
+
 
 def register(request):
     return render(request, 'register.html')
@@ -62,7 +63,7 @@ def logout_view(request):
 @login_required(login_url='../login')
 def profile(request):
     if request.user.is_jobseeker:
-        user_job_seeker = Job_Seeker.objects.get(user=request.user)
+        user_job_seeker = JobSeeker.objects.get(user=request.user)
         context = {
             'user_job_seeker': user_job_seeker
         }
@@ -79,26 +80,26 @@ def profile(request):
 @login_required(login_url='../login')
 def update_profile(request):
     if request.user.is_jobseeker:
-        user_job_seeker = Job_Seeker.objects.get(user=request.user)
+        user_job_seeker = JobSeeker.objects.get(user=request.user)
         context = {
             'user_job_seeker': user_job_seeker
         }
 
         if request.method == 'POST':                      
             username = request.POST['username']
-            first_name = request.POST['first_name']
-            last_name = request.POST['last_name']
+            name = request.POST['name']
+            # last_name = request.POST['last_name']
             email = request.POST['email']
             phone_number = request.POST['phone_number']
-            location = request.POST['location']
+            # location = request.POST['location']
 
-            user_job_seeker = Job_Seeker.objects.get(user=request.user)
+            user_job_seeker = JobSeeker.objects.get(user=request.user)
 
-            user_job_seeker.user.first_name = first_name
-            user_job_seeker.user.last_name = last_name
+            user_job_seeker.user.name = name
+            # user_job_seeker.user.last_name = last_name
             user_job_seeker.user.email = email
             user_job_seeker.user.phone_number = phone_number
-            user_job_seeker.location = location
+            # user_job_seeker.location = location
 
             user_job_seeker.save()
 
@@ -123,19 +124,19 @@ def update_profile(request):
 
         if request.method == 'POST':
             username = request.POST['username']
-            first_name = request.POST['first_name']
-            last_name = request.POST['last_name']
+            name = request.POST['name']
+            # last_name = request.POST['last_name']
             email = request.POST['email']
             phone_number = request.POST['phone_number']
-            designation = request.POST['designation']
+            # designation = request.POST['designation']
 
             user_hirer = Hirer.objects.get(user=request.user)
 
-            user_hirer.user.first_name = first_name
-            user_hirer.user.last_name = last_name
+            user_hirer.user.name = name
+            # user_hirer.user.last_name = last_name
             user_hirer.user.email = email
             user_hirer.user.phone_number = phone_number
-            user_hirer.designation = designation
+            # user_hirer.designation = designation
 
             user_hirer.save()
 

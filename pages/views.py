@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.shortcuts import redirect, render, get_object_or_404, HttpResponseRedirect
-from App.models import Hirer, Job_Seeker, HirerPost
+from App.models import Hirer, JobSeeker, HirerPost
 from django.contrib.auth.decorators import login_required
 from App.form import PostForm
 
