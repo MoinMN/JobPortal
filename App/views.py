@@ -1,11 +1,12 @@
 from django.contrib.auth import login, logout, authenticate
+from django.http import HttpResponse
 from django.shortcuts import redirect, render, get_object_or_404, HttpResponseRedirect
 from django.contrib import messages
 from django.views.generic import CreateView
-from .form import JobSeekerSignUpForm, HirerSignUpForm
+from .form import JobSeekerSignUpForm, HirerSignUpForm, ResumeForm
 from django.contrib.auth.forms import AuthenticationForm
 from .models import User
-from App.models import Hirer, JobSeeker
+from App.models import Hirer, JobSeeker, JobSeekerAddress, JobSeekerEducation, JobSeekerWorkExperience
 from django.contrib.auth.decorators import login_required
 
 
@@ -64,10 +65,104 @@ def logout_view(request):
 def profile(request):
     if request.user.is_jobseeker:
         user_job_seeker = JobSeeker.objects.get(user=request.user)
+        user_job_seeker_address = JobSeekerAddress.objects.filter(jobSeeker=user_job_seeker).first()
+        user_job_seeker_education = JobSeekerEducation.objects.filter(jobSeeker=user_job_seeker).first()
+        user_job_seeker_experience = JobSeekerWorkExperience.objects.filter(jobSeeker=user_job_seeker).first()
         context = {
-            'user_job_seeker': user_job_seeker
+            'skills': user_job_seeker.skills.split(','),
+            'user_job_seeker': user_job_seeker,
+            'user_job_seeker_address': user_job_seeker_address,
+            'user_job_seeker_education': user_job_seeker_education,
+            'user_job_seeker_experience': user_job_seeker_experience
         }
 
+        if request.method == 'POST':
+            if 'form1_submit' in request.POST:
+                username = request.POST['username']
+                name = request.POST['name']
+                email = request.POST['email']
+                phone_number = request.POST['phone_number']
+                skills = request.POST['skills']
+                about = request.POST['about']
+
+                user_job_seeker = JobSeeker.objects.get(user=request.user)
+
+                user_job_seeker.user.name = name
+                user_job_seeker.user.email = email
+                user_job_seeker.user.phone_number = phone_number
+                user_job_seeker.skills = skills
+                user_job_seeker.about = about
+
+                user_job_seeker.save()
+
+                if User.objects.filter(username=username).exists() and username!=request.user.username:
+                    context = {
+                        'user_job_seeker': user_job_seeker,
+                        'error': "Username Already Exist"
+                    }
+                    # return render(request, 'newProfile.html', context)
+                else:
+                    user_job_seeker.user.username = username
+
+                user_job_seeker.user.save()
+
+            elif 'form2_submit' in request.POST:
+                street_address = request.POST['street_address']
+                city = request.POST['city']
+                state = request.POST['state']
+                postal_code = request.POST['postal_code']
+                country = request.POST['country']
+
+                user_job_seeker_address, user_job_seeker_address_create = JobSeekerAddress.objects.get_or_create(jobSeeker_id=request.user.id)
+
+                user_job_seeker_address.street_address = street_address
+                user_job_seeker_address.city = city
+                user_job_seeker_address.state = state 
+                user_job_seeker_address.postal_code = postal_code
+                user_job_seeker_address.country = country
+
+                user_job_seeker_address.save()
+
+            elif 'form3_submit' in request.POST:
+                school_name = request.POST['school_name']
+                degree = request.POST['degree']
+                start_date = request.POST['start_date_edu']
+                end_date = request.POST['end_date_edu']
+                description = request.POST['description_edu']
+
+
+                user_job_seeker_education, user_job_seeker_education_create = JobSeekerEducation.objects.get_or_create(jobSeeker_id=request.user.id)
+
+                user_job_seeker_education.school_name = school_name
+                user_job_seeker_education.degree = degree
+                user_job_seeker_education.start_date = start_date
+                user_job_seeker_education.end_date = end_date
+                user_job_seeker_education.description = description
+
+                user_job_seeker_education.save()
+
+            elif 'form4_submit' in request.POST:
+                company_name = request.POST['company_name']
+                position = request.POST['position']
+                start_date = request.POST['start_date_exp']
+                end_date = request.POST['end_date_exp']
+                description = request.POST['description_exp']
+
+                user_job_seeker_expreience, user_job_seeker_experience_create = JobSeekerWorkExperience.objects.get_or_create(jobSeeker_id=request.user.id)
+
+                user_job_seeker_expreience.company_name = company_name
+                user_job_seeker_expreience.position = position
+                user_job_seeker_expreience.start_date = start_date
+                user_job_seeker_expreience.end_date = end_date
+                user_job_seeker_expreience.description = description
+
+                print(user_job_seeker_experience.end_date)
+
+                user_job_seeker_expreience.save()
+            else:
+                print('else')
+            return redirect('../profile')
+        
     if request.user.is_hirer:
         user_hirer = Hirer.objects.get(user=request.user)
         # Hirer.objects.update()
@@ -75,7 +170,7 @@ def profile(request):
             'user_hirer': user_hirer
         }
 
-    return render(request, 'profile.html', context)
+    return render(request, 'newProfile.html', context)
 
 @login_required(login_url='../login')
 def update_profile(request):
@@ -157,3 +252,16 @@ def update_profile(request):
     
 
 
+
+@login_required(login_url='../login')
+def upload_resume(request):
+    if request.method == 'POST':
+        form = ResumeForm(request.POST, request.FILES)
+        if form.is_valid():
+            resume = form.save(commit=False)
+            resume.jobSeeker_id = request.user.id
+            resume.save()
+            return HttpResponse('success')
+    else:
+        form = ResumeForm()
+    return render(request, 'upload_resume.html', {'form': form})

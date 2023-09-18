@@ -27,6 +27,7 @@ SECRET_KEY = 'django-insecure-lei7-*5soac67t64upn8@%snd1r-v5siukd#^^u7h-0k^8=hb!
 DEBUG = True
 
 ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = ['192.168.2.4']
 
 
 # Application definition
@@ -135,3 +136,6 @@ STATICFILES_DIRS = [
 ]
 
 AUTH_USER_MODEL = 'App.User'
+
+# MEDIA_URL = '/media/'
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

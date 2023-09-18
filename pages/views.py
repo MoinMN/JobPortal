@@ -1,12 +1,38 @@
 from django.shortcuts import render
 from django.shortcuts import redirect, render, get_object_or_404, HttpResponseRedirect
 from App.models import Hirer, JobSeeker, HirerPost
+from .models import ContactUs
 from django.contrib.auth.decorators import login_required
 from App.form import PostForm
 
 
 # Create your views here.
-def index(request):
+def landingPage(request):
+    if request.method == 'POST':
+        name = request.POST['name']
+        email = request.POST['email']
+        subject = request.POST['subject']
+        message = request.POST['message']
+
+        contact = ContactUs.objects.create()
+
+        contact.name = name
+        contact.email = email
+        contact.subject = subject
+        contact.message = message
+
+        contact.save()
+
+        context = {
+            'success': "Thanks for contacting us! We will contact you shortly.",
+        }
+        return render(request, 'landingPage.html', context)
+
+    return render(request, 'landingPage.html')
+
+
+
+def home(request):
     return render(request, 'index.html')
 
 @login_required

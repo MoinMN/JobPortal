@@ -19,8 +19,9 @@ from . import views
 
 
 urlpatterns = [
-    path('', views.index, name='home'),
+    path('', views.landingPage, name='landingPage'),
 
+    path('home', views.home, name='home'),
     path('create/', views.create_post, name='create_post'),
     path('post_view/', views.post_view, name='post_view'),
 ]

@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>
         {% if user_hirer %}
-        {{ user_hirer.user.last_name }}
+        {{ user_hirer.user.name }}
         {% elif user_job_seeker %}
-        {{ user_job_seeker.user.last_name }}
+        {{ user_job_seeker.user.name }}
         {% else %}
         Profile
         {% endif %}
@@ -16,6 +16,8 @@
     </title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+    {% load static %}
+    <link rel="shortcut icon" href="{% static 'img/favicon-bg.jpg'' %}" type="image/x-icon">
     <style>    
         .container .item input{
             border: none;
@@ -65,7 +67,7 @@
 
 
         <!-- Display Job Seeker profile fields -->
-        {% elif user_job_seeker %}
+        {% elif user_job_seeker %}        
         <div class="item">
             <label for="id_username">Username:</label>
             <input type="text" name="username" id="id_username" value="{{ user_job_seeker.user.username }}" readonly>
@@ -82,6 +84,9 @@
         </div>
 
         {% comment %}  
+        <!-- <div class="item">
+            <img src="{{user_job_seeker.user.profile_img.url}}" height="150px" width="150px" alt="{{user_job_seeker.user.username}} Profile Picture">
+        </div> -->
         <!-- <div class="item">
             <label for="last_name">Second Name:</label>
             <input type="text" name="last_name" id="last_name" value="{{ user_job_seeker.user.last_name }}" readonly>

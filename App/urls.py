@@ -27,5 +27,6 @@ urlpatterns = [
     path('logout/',views.logout_view, name='logout'),
     path('profile/',views.profile, name='profile'),
     path('update_profile/',views.update_profile, name='update_profile'),
+    path('resume/',views.upload_resume, name='upload_resume'),
     # path('profile/<str:username>/',views.profile, name='profile'),
 ]
