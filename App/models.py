@@ -13,27 +13,22 @@ class User(AbstractUser):
 
 
 class JobSeeker(models.Model):
-    id = models.UUIDField(default=uuid4, editable=False)
-    
+    id = models.UUIDField(default=uuid4, editable=False)    
     user = models.OneToOneField(User, on_delete = models.CASCADE, primary_key = True)
+
+    date_of_birth = models.DateField(blank=True, null=True)
 
     # About me
     about = models.TextField(blank=True, null=True)
     
     # skills
-    skills = models.TextField(blank=True, null=True, default='None, ')
+    skills = models.TextField(blank=True, null=True, default='None')
 
     # resume
-    # file = models.FileField(upload_to='resumes/')
+    file = models.FileField(upload_to='resumes/', blank=True, null=True)
 
-    # Address
-    # jobSeekerAddress = models.ForeignKey(JobSeekerAddress, on_delete=models.CASCADE, null=True, blank=True)
-
-    # Education
-    # jobSeekerEducation = models.ManyToManyField(JobSeekerEducation, null=True, blank=True)
-
-    # work experience
-    # jobSeekerWorkExperience = models.ManyToManyField(JobSeekerWorkExperience, null=True, blank=True)
+    # profile image
+    profile_image = models.ImageField(upload_to='profile_images/', default='profile_images/defaultProfileImage.png', blank=True, null=True)
     
     def __str__(self):
         return self.user.username
@@ -56,11 +51,10 @@ class JobSeekerEducation(models.Model):
     jobSeeker = models.ForeignKey(JobSeeker, on_delete=models.CASCADE)
 
     school_name = models.CharField(max_length=100)
-    degree = models.CharField(max_length=100)
-    # field_of_study = models.CharField(max_length=100)
+    degree = models.CharField(max_length=100, null=True)
+    field_of_study = models.CharField(max_length=100, null=True)
     start_date = models.DateField(null=True)
     end_date = models.DateField(null=True)
-    description = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return self.jobSeeker.user.username
@@ -77,9 +71,9 @@ class JobSeekerWorkExperience(models.Model):
     def __str__(self):
         return self.jobSeeker.user.username
 
-class Resume(models.Model):
-    jobSeeker = models.ForeignKey(JobSeeker, on_delete=models.CASCADE)
-    file = models.FileField(upload_to='resumes/')
+# class Resume(models.Model):
+#     jobSeeker = models.ForeignKey(JobSeeker, on_delete=models.CASCADE)
+#     file = models.FileField(upload_to='resumes/')
 
 
     # def save(self, *args, **kwargs):
@@ -95,8 +89,8 @@ class Resume(models.Model):
     #     self.file.name = new_filename
 
     #     super(Resume, self).save(*args, **kwargs)
-    def __str__(self):
-        return self.jobSeeker.user.username
+    # def __str__(self):
+    #     return self.jobSeeker.user.username
 
 
 
@@ -106,6 +100,8 @@ class Hirer(models.Model):
     id = models.UUIDField(default=uuid4, editable=False)
 
     user = models.OneToOneField(User, on_delete = models.CASCADE, primary_key = True)
+
+    profile_image = models.ImageField(upload_to='profile_images/', default='profile_images/defaultProfileImage.png', blank=True, null=True)
 
     company_name = models.CharField(max_length=100, null=True)
     

@@ -13,6 +13,9 @@ const backgroundImages = [
     'static/img/img3.jpg',
     'static/img/img4.jpg',
     'static/img/img5.jpg',
+    'static/img/img6.jpg',
+    'static/img/img7.jpg',
+    'static/img/img8.jpg',
 ];
 
 let heroImg = document.getElementById('hero-img');

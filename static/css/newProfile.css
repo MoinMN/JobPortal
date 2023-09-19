@@ -121,8 +121,7 @@ input[type="radio"]:checked+label {
     width: 75%;
 }
 
-.container .profile-info table th,
-td {
+.container .profile-info table th, td {
     border-bottom: 2px solid grey;
 }
 
@@ -170,6 +169,7 @@ input::-webkit-inner-spin-button {
     border: 1px solid grey;
 }
 
+#technicalData,
 #addressData,
 #educationData,
 #experienceData {
@@ -177,13 +177,15 @@ input::-webkit-inner-spin-button {
 }
 
 .dateEdu,
-.dateExp {
+.dateExp, 
+#dateDet{
     padding: 18px 0;
     display: none;
 }
 
 .dateTextEdu input,
-.dateTextExp input {
+.dateTextExp input,
+#dateTextDet input {
     border: none;
 }
 #skillsInput{
@@ -195,4 +197,19 @@ input::-webkit-inner-spin-button {
     color: white;
     padding: 2px 5px;
     border-radius: 6px;
+}
+
+.inputEdu,
+.inputExp{
+    display: none;
+    padding: 20px 0;
+}
+
+#profile-img{
+    transition: transform 0.5s ease;
+    cursor: pointer;
+}
+
+#resumeStatus a{
+    color: black;
 }
