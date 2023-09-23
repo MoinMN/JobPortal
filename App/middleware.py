@@ -14,6 +14,8 @@ class RedirectLoggedInUserMiddleware:
             return redirect('home')
         if request.user.is_authenticated and request.path == reverse('hirer_register'):
             return redirect('home')
+        if request.user.is_authenticated and request.path == reverse('landingPage'):
+            return redirect('home')
         
         response = self.get_response(request)
         return response

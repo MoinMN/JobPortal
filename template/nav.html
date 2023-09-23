@@ -1,0 +1,50 @@
+<nav>
+    <div class="left">
+        <a href="{% url 'home' %}">
+            <h1>Job<span>Portal</span></h1>
+        </a>
+    </div>
+    <div class="center">
+        {% if user.is_jobseeker %}
+            <ul>
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'find-job' %}">Find Jobs</a></li>
+                <li><a href="">Applied Jobs</a></li>
+                <li><a href="">Saved Jobs</a></li>
+            </ul>
+        {% else %}
+            <ul>
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'post-job' %}">Post Job</a></li>
+                <li><a href="{% url 'my-post' %}">My Posts</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+
+        {% endif %}
+    </div>
+    <div class="right">
+        {% if user.is_hirer %}
+
+            {% if request.resolver_match.view_name == "profile" %}
+                <span><a href="{% url 'logout' %}" class="logout"><i class="fa-solid fa-right-from-bracket"></i>
+                    Logout</a></span>
+            {% else %}
+                <span><a href="#" class="bell"><i class="fa-regular fa-bell fa-lg"></i></a></span>
+            {% endif %}
+
+        {% else %}
+
+            {% if request.resolver_match.view_name == "profile" %}
+                <span><a href="{% url 'logout' %}" class="logout"><i class="fa-solid fa-right-from-bracket"></i>
+                    Logout</a></span>
+            {% else %}
+                <span><a href="#" class="bell"><i class="fa-regular fa-bell fa-lg"></i></a></span>
+            {% endif %}
+
+        {% endif %}
+        <span><a href="{% url 'profile' %}" class="profile"><i class="fa-solid fa-user"></i> My Profile</a>
+    </div>
+</nav>
+
+{% load static %}
+<link rel="stylesheet" href='{% static "css/nav.css" %}'>

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User, JobSeeker, JobSeekerAddress, JobSeekerEducation, JobSeekerWorkExperience, Hirer, HirerPost
+from .models import User, JobSeeker, JobSeekerAddress, JobSeekerEducation, JobSeekerWorkExperience, Hirer, HirerAddress, HirerPost, JobApplication
 
 class UserAdmin(admin.ModelAdmin):
     list_display=('username', 'is_superuser', 'is_jobseeker', 'is_hirer', 'name', 'email', 'phone_number')
@@ -18,11 +18,13 @@ admin.site.register(JobSeekerWorkExperience)
 # admin.site.register(Resume)
 
 class HirerAdmin(admin.ModelAdmin):
-    list_display=('user', 'company_name')
+    list_display=('user', 'profile_image', 'company_name', 'about_company')
 admin.site.register(Hirer, HirerAdmin)
 
 
+admin.site.register(HirerAddress)
 admin.site.register(HirerPost)
+admin.site.register(JobApplication)
 
 
 

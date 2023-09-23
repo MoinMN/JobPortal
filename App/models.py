@@ -6,29 +6,41 @@ from uuid import uuid4
 class User(AbstractUser):
     is_jobseeker = models.BooleanField(default=False)
     is_hirer = models.BooleanField(default=False)
-    name = models.CharField(max_length=100)
-    # last_name = models.CharField(max_length=100)
-    email = models.EmailField()
-    phone_number = models.CharField(max_length=20)
+    name = models.CharField(max_length=100, null=False)
+    email = models.EmailField(null=False)
+    phone_number = models.CharField(max_length=20, null=False)
 
 
 class JobSeeker(models.Model):
     id = models.UUIDField(default=uuid4, editable=False)    
     user = models.OneToOneField(User, on_delete = models.CASCADE, primary_key = True)
-
     date_of_birth = models.DateField(blank=True, null=True)
-
     # About me
     about = models.TextField(blank=True, null=True)
-    
     # skills
     skills = models.TextField(blank=True, null=True, default='None')
-
     # resume
     file = models.FileField(upload_to='resumes/', blank=True, null=True)
-
     # profile image
     profile_image = models.ImageField(upload_to='profile_images/', default='profile_images/defaultProfileImage.png', blank=True, null=True)
+
+    facebook_url = models.URLField(blank=True, null=True)
+    linkedin_url = models.URLField(blank=True, null=True)
+    twitter_url = models.URLField(blank=True, null=True)
+
+    
+    def calculate_jobseeker_completeness(self):
+        # Define the fields that are required for a complete profile
+        required_fields = ['date_of_birth', 'about', 'skills', 'file', 'profile_image', 'facebook_url', 'linkedin_url', 'twitter_url']
+        
+        # Calculate the percentage of completed fields
+        completed_fields = sum(1 for field in required_fields if getattr(self, field))
+        total_fields = len(required_fields)
+        
+        # Calculate the percentage
+        return (completed_fields / total_fields) * 100
+
+    
     
     def __str__(self):
         return self.user.username
@@ -44,6 +56,18 @@ class JobSeekerAddress(models.Model):
     postal_code = models.CharField(max_length=20)
     country = models.CharField(max_length=100)
 
+    def calculate_jobseekeraddress_completeness(self):
+        # Define the fields that are required for a complete profile
+        required_fields = ['street_address', 'city', 'state', 'postal_code', 'country']
+        
+        # Calculate the percentage of completed fields
+        completed_fields = sum(1 for field in required_fields if getattr(self, field))
+        total_fields = len(required_fields)
+        
+        # Calculate the percentage
+        return (completed_fields / total_fields) * 100
+
+
     def __str__(self):
         return self.jobSeeker.user.username
 
@@ -55,6 +79,17 @@ class JobSeekerEducation(models.Model):
     field_of_study = models.CharField(max_length=100, null=True)
     start_date = models.DateField(null=True)
     end_date = models.DateField(null=True)
+
+    def calculate_jobseekereducation_completeness(self):
+        # Define the fields that are required for a complete profile
+        required_fields = ['school_name', 'degree', 'field_of_study', 'start_date', 'end_date']
+        
+        # Calculate the percentage of completed fields
+        completed_fields = sum(1 for field in required_fields if getattr(self, field))
+        total_fields = len(required_fields)
+        
+        # Calculate the percentage
+        return (completed_fields / total_fields) * 100
 
     def __str__(self):
         return self.jobSeeker.user.username
@@ -68,30 +103,19 @@ class JobSeekerWorkExperience(models.Model):
     end_date = models.DateField(null=True)
     description = models.TextField()
 
+    def calculate_jobseekerworkexperience_completeness(self):
+        # Define the fields that are required for a complete profile
+        required_fields = ['company_name', 'position', 'start_date', 'end_date', 'description']
+        
+        # Calculate the percentage of completed fields
+        completed_fields = sum(1 for field in required_fields if getattr(self, field))
+        total_fields = len(required_fields)
+        
+        # Calculate the percentage
+        return (completed_fields / total_fields) * 100
+
     def __str__(self):
         return self.jobSeeker.user.username
-
-# class Resume(models.Model):
-#     jobSeeker = models.ForeignKey(JobSeeker, on_delete=models.CASCADE)
-#     file = models.FileField(upload_to='resumes/')
-
-
-    # def save(self, *args, **kwargs):
-    #     # Modify the filename here (e.g., append a timestamp)
-    #     import os
-    #     from django.utils import timezone
-
-    #     timestamp = timezone.now().strftime('%Y%m%d%H%M%S')
-    #     filename, file_extension = os.path.splitext(self.file.name)
-    #     new_filename = f'{self.jobSeeker.user.username}_{timestamp}{file_extension}'
-
-    #     # Update the file field with the new filename
-    #     self.file.name = new_filename
-
-    #     super(Resume, self).save(*args, **kwargs)
-    # def __str__(self):
-    #     return self.jobSeeker.user.username
-
 
 
 
@@ -104,6 +128,23 @@ class Hirer(models.Model):
     profile_image = models.ImageField(upload_to='profile_images/', default='profile_images/defaultProfileImage.png', blank=True, null=True)
 
     company_name = models.CharField(max_length=100, null=True)
+
+    about_company = models.TextField(null=True, blank=True)
+
+    facebook_url = models.URLField(blank=True, null=True)
+    linkedin_url = models.URLField(blank=True, null=True)
+    twitter_url = models.URLField(blank=True, null=True)
+
+    def calculate_hirer_completeness(self):
+        # Define the fields that are required for a complete profile
+        required_fields = ['profile_image', 'company_name', 'about_company', 'facebook_url', 'linkedin_url', 'twitter_url']
+        
+        # Calculate the percentage of completed fields
+        completed_fields = sum(1 for field in required_fields if getattr(self, field))
+        total_fields = len(required_fields)
+        
+        # Calculate the percentage
+        return (completed_fields / total_fields) * 100
     
     def __str__(self):
         return self.user.username
@@ -118,6 +159,17 @@ class HirerAddress(models.Model):
     postal_code = models.CharField(max_length=20)
     country = models.CharField(max_length=100)
 
+    def calculate_hireraddress_completeness(self):
+        # Define the fields that are required for a complete profile
+        required_fields = ['street_address', 'city', 'state', 'postal_code', 'country']
+        
+        # Calculate the percentage of completed fields
+        completed_fields = sum(1 for field in required_fields if getattr(self, field))
+        total_fields = len(required_fields)
+        
+        # Calculate the percentage
+        return (completed_fields / total_fields) * 100
+
     def __str__(self):
         return self.hirer.user.username
 
@@ -128,10 +180,26 @@ class HirerPost(models.Model):
     hire = models.ForeignKey(Hirer, on_delete=models.CASCADE)
 
     title = models.CharField(max_length=200)
-    content = models.TextField()
+    experience = models.CharField(max_length=100, null=True, blank=True, default='None')
+    salary = models.DecimalField(max_digits=15, decimal_places=0,null=True, blank=True, default='Not Disclosed')
+    intake = models.DecimalField(max_digits=15, decimal_places=0,null=True, blank=True, default='Not Disclosed')
+    location = models.CharField(max_length=100)
+    role = models.CharField(max_length=100)
+    industry_type = models.CharField(max_length=100)
+    department = models.CharField(max_length=100)
+    employee_type = models.CharField(max_length=100)
+    job_highlights = models.TextField()
+    job_purpose = models.TextField()
+    education = models.TextField()
     skills_requirement = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.title
+    
+
+class JobApplication(models.Model):
+    applicant = models.ForeignKey(JobSeeker, on_delete=models.CASCADE)
+    job_post = models.ForeignKey(HirerPost, on_delete=models.CASCADE)
+    resume = models.FileField(upload_to='resumes/')
     

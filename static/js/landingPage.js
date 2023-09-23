@@ -16,6 +16,11 @@ const backgroundImages = [
     'static/img/img6.jpg',
     'static/img/img7.jpg',
     'static/img/img8.jpg',
+    'static/img/img9.jpg',
+    'static/img/img10.jpg',
+    'static/img/img11.jpg',
+    'static/img/img12.jpg',
+    'static/img/img13.jpg',
 ];
 
 let heroImg = document.getElementById('hero-img');
@@ -28,4 +33,4 @@ setInterval(() => {
     heroImg.style.backgroundSize = 'cover';
     heroImg.style.backgroundRepeat = 'no-repeat';
     heroImg.style.backgroundPosition = 'center';
-}, 5000);
+}, 3000);

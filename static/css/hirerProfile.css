@@ -1,0 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Croissant+One&family=Roboto&family=Ubuntu&display=swap');
+/* font-family: 'Croissant One', cursive; */
+/* font-family: 'Roboto', sans-serif; */
+/* font-family: 'Ubuntu', sans-serif; */
+
+
+#hirerAddressData,
+#hirerCompanyDetailData {
+    display: none;
+}
+
+
+.container {
+    font-family: 'Roboto', sans-serif;
+}
+
+tr th {
+    width: 200px;
+}
+
+textarea {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+    width: 100%;
+    resize: vertical;
+}

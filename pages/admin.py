@@ -5,3 +5,4 @@ from .models import ContactUs
 class ContactUsAdmin(admin.ModelAdmin):
     list_display=('name', 'email', 'subject', 'message')
 admin.site.register(ContactUs, ContactUsAdmin)
+

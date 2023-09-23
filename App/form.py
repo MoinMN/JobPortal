@@ -56,9 +56,10 @@ class HirerSignUpForm(UserCreationForm):
 
 
 class PostForm(forms.ModelForm):
+    # salary = forms.DecimalField(widget=forms.NumberInput(attrs={'type': 'number'}))
     class Meta:
         model = HirerPost
-        fields = ['title', 'content']
+        fields = ['title', 'experience', 'location', 'salary', 'intake', 'role', 'industry_type', 'department', 'employee_type', 'job_highlights', 'job_purpose', 'education', 'skills_requirement']
 
 
 # class TechnicalForm(forms.ModelForm):

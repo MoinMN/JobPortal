@@ -22,6 +22,14 @@ urlpatterns = [
     path('', views.landingPage, name='landingPage'),
 
     path('home', views.home, name='home'),
-    path('create/', views.create_post, name='create_post'),
-    path('post_view/', views.post_view, name='post_view'),
+    path('post-job', views.create_post, name='post-job'),
+    path('my-post', views.my_post, name='my-post'),
+
+    path('update-post/<int:post_id>', views.update_post, name='update-post'),
+    path('delete-post/<int:post_id>', views.delete_post, name='delete-post'),
+    path('view-post/<int:post_id>', views.post_view, name='view-post'),
+
+    path('find-job', views.find_job, name='find-job'),
+
+    path('profile/<str:username>', views.view_profile, name='view_profile'),
 ]

@@ -1,0 +1,376 @@
+@import url('https://fonts.googleapis.com/css2?family=Croissant+One&family=Roboto&family=Ubuntu&display=swap');
+
+/* font-family: 'Croissant One', cursive; */
+/* font-family: 'Roboto', sans-serif; */
+/* font-family: 'Ubuntu', sans-serif; */
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #F8F9FA;
+}
+
+.container {
+    font-family: 'Roboto', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    gap: 2em;
+    margin: 2em 0;
+}
+
+.container-content-one,
+.container-content-two {
+    display: flex;
+    flex-direction: column;
+    gap: 2em;
+}
+
+.box {
+    display: flex;
+    flex-direction: column;
+    border-radius: 12px;
+    border: 1px solid rgba(190, 190, 190, 0.696);
+    background-color: #FFFFFF;
+    width: 700px;
+    padding: 24px 40px;
+    transition: box-shadow 0.5s ease;
+}
+
+.box:hover {
+    box-shadow: 0px 0px 20px 2px rgba(213, 213, 213, 0.685);
+}
+
+.box-head {
+    display: flex;
+    justify-content: space-between;
+}
+
+.box-title h3 {
+    color: black;
+    font-size: 1.3rem;
+    line-height: 1.2em;
+}
+
+.box-title h5 {
+    color: black;
+    font-size: 1rem;
+}
+
+.box-img img {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+}
+
+.box-list {
+    color: rgb(80, 80, 80);
+    font-size: 1rem;
+}
+
+.box-list-top {
+    display: flex;
+    gap: 2em;
+}
+
+.box-list-top span i {
+    padding-right: 3px;
+}
+
+.box-list-top .rupee {
+    padding: 0 30px;
+    border-left: 1px solid rgb(223, 223, 223);
+}
+
+.box-list-bottom {
+    font-size: 1rem;
+}
+
+.box-list-bottom span i {
+    margin-top: 9px;
+    padding-right: 5px;
+}
+
+hr {
+    border: 1px solid rgba(227, 227, 227, 0.61);
+    border-radius: 12px;
+    margin: 20px 0;
+}
+
+.box-content {
+    font-size: 0.9rem;
+    color: #717B9E;
+    line-height: 2em;
+}
+
+.box-end {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1rem;
+    color: #717B9E;
+    line-height: 2em;
+}
+
+.box-end-info span {
+    border-right: 1px solid grey;
+    padding: 0 12px;
+}
+
+.box-end-info span p {
+    display: inline;
+    color: black;
+}
+
+.box-end .box-btn {
+    display: flex;
+    gap: 1em;
+}
+
+.box-end .box-btn a button {
+    padding: 6px 28px;
+    border-radius: 24px;
+    /* border: none; */
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.box-end .box-btn .save {
+    color: rgb(0, 85, 255);
+    background-color: transparent;
+    transition: background-color 0.5s ease;
+}
+
+.box-end .box-btn .save:hover {
+    background-color: #F8F9FA;
+}
+
+.box-end .box-btn .apply {
+    padding: 8px 28px;
+    color: white;
+    background-color: rgb(0, 85, 255);
+    border: none;
+    transition: background-color 0.5s ease;
+}
+
+.box-end .box-btn .apply:hover {
+    background-color: #4a65ff;
+}
+
+.box-two {
+    border-radius: 12px;
+    border: 1px solid rgba(190, 190, 190, 0.696);
+    background-color: #FFFFFF;
+    padding: 24px 40px;
+    transition: box-shadow 0.5s ease;
+    width: 700px;
+}
+
+.box-two:hover {
+    box-shadow: 0px 0px 20px 2px rgba(213, 213, 213, 0.685);
+}
+
+.box-two .box-two-content {
+    margin: 12px 0;
+}
+
+.box-two .box-two-content h2 {
+    font-size: 1.2rem;
+    margin-bottom: 12px;
+}
+
+.box-two .box-two-content h3 {
+    font-size: 1rem;
+}
+
+.box-two .box-two-content .job-purpose p {
+    font-size: 1rem;
+    line-height: 1.2em;
+    color: rgb(86, 86, 86);
+}
+
+.box-two .box-two-content span {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.box-two .box-two-content p {
+    font-size: 1rem;
+    color: rgb(86, 86, 86);
+    display: inline;
+}
+
+.social-media a {
+    font-size: 2rem;
+    text-decoration: none;
+    margin-right: 8px;
+}
+
+.social-media #facebook {
+    color: #3975EA;
+}
+
+.social-media #linkedin {
+    color: #2D64BC;
+
+}
+
+.social-media #twitter {
+    color: #4A99E9;
+
+}
+
+.box-three {
+    display: flex;
+    flex-direction: column;
+    border-radius: 12px;
+    border: 1px solid rgba(190, 190, 190, 0.696);
+    background-color: #FFFFFF;
+    padding: 24px 40px;
+    transition: box-shadow 0.5s ease;
+    width: 500px;
+}
+
+.box-three:hover {
+    box-shadow: 0px 0px 20px 2px rgba(213, 213, 213, 0.685);
+}
+
+.box-three .job-highlight {
+    margin: 12px 0;
+    padding: 12px 20px;
+    border-radius: 12px;
+    background-color: #F8F9FA;
+}
+
+.box-three .job-highlight h3 {
+    font-size: 1.2rem;
+    margin: 12px 0;
+}
+
+.box-three .content-job-highlight ul li {
+    margin: 8px 18px;
+    font-size: 1rem;
+    /* line-height: 1.3em; */
+}
+
+.box-three .skills-required {
+    padding: 12px 20px;
+    margin: 12px 0;
+}
+
+.box-three .skills-required h3 {
+    font-size: 1.2rem;
+}
+
+.box-three .content-skills-required {
+    font-size: 1rem;
+    margin: 12px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.box-three .content-skills-required div {
+    background-color: rgb(0, 85, 255);
+    color: white;
+    margin: 6px 0;
+    margin-right: 8px;
+    border: 2px solid rgb(0, 85, 255);
+    padding: 2px 8px;
+    border-radius: 8px;
+    transition: all 300ms ease-in-out;
+}
+
+.box-three .content-skills-required div:hover {
+    background-color: transparent;
+    border-radius: 12px;
+    color: rgb(0, 85, 255);
+    border: 2px solid rgb(0, 85, 255);
+    cursor: pointer;
+}
+
+.box-four {
+    display: flex;
+    flex-direction: column;
+    border-radius: 12px;
+    border: 1px solid rgba(190, 190, 190, 0.696);
+    background-color: #FFFFFF;
+    padding: 24px 40px;
+    transition: box-shadow 0.5s ease;
+    width: 700px;
+}
+
+.box-four:hover {
+    box-shadow: 0px 0px 20px 2px rgba(213, 213, 213, 0.685);
+}
+
+.box-four h3 {
+    font-size: 1.2rem;
+    margin-top: 20px;
+}
+
+.box-four p {
+    font-size: 1rem;
+    line-height: 1.2rem;
+    margin-top: 6px;
+    color: rgb(86, 86, 86);
+}
+
+.box-five {
+    display: flex;
+    flex-direction: column;
+    border-radius: 12px;
+    border: 1px solid rgba(190, 190, 190, 0.696);
+    background-color: #FFFFFF;
+    padding: 12px 20px;
+    transition: box-shadow 0.5s ease;
+    width: 500px;
+}
+
+.box-five:hover {
+    box-shadow: 0px 0px 20px 2px rgba(213, 213, 213, 0.685);
+}
+
+.box-five h3 {
+    font-size: 1.3rem;
+    margin-top: 20px;
+}
+
+.box-five p {
+    font-size: 1rem;
+    line-height: 1.2rem;
+    margin-top: 6px;
+    color: rgb(86, 86, 86);
+}
+
+.job-purpose ul {
+    padding: 2px 18px;
+}
+
+.job-purpose ul li {
+    margin: 8px 0;
+}
+.edit{
+    background-color: rgb(0, 85, 255);
+    border: 1px solid black;
+    transition: background-color 500ms ease-in-out;
+    color: white;
+}
+.edit:hover{
+    background-color: rgb(57, 126, 255);
+}
+.delete{
+    color: white;
+    border: 1px solid black;
+    background-color: red;
+    transition: background-color 500ms ease-in-out;
+}
+.delete:hover{
+    background-color: rgb(255, 75, 47);
+}
+.save{
+    border: 2px solid rgb(0, 85, 255);
+}

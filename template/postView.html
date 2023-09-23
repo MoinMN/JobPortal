@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{post.title}} | {{post.hire.company_name}} | JobPortal</title>
+    <script src="https://kit.fontawesome.com/437000937b.js" crossorigin="anonymous"></script>
+    {% load static %}
+    <link rel="shortcut icon" href="{% static 'img/favicon-bg.jpg' %}" type="image/x-icon">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/postView.css' %}">
+</head>
+
+<body>
+    {% include "nav.html"%}
+    <div class="container">
+        <div class="container-content-one">
+            <div class="box">
+                <div class="box-head">
+                    <div class="box-title">
+                        <h3>{{post.title}}</h3>
+                        <h5>{{post.hire.company_name}}</h5>
+                    </div>
+                    <div class="box-img">
+                        <img src="{{ post.hire.profile_image.url }}" alt="Compnay Image">
+                    </div>
+                </div>
+                <div class="box-list">
+                    <div class="box-list-top">
+                        <span><i class="fa-solid fa-briefcase"></i> {{post.experience}}</span>
+                        <span class="rupee"><i class="fa-solid fa-indian-rupee-sign"></i> {{post.salary}}</span>
+                    </div>
+                    <div class="box-list-bottom">
+                        <span><i class="fa-solid fa-location-dot"></i> {{post.location}}</span>
+                    </div>
+                </div>
+                <hr>
+                <div class="box-end">
+                    <div class="box-end-info">
+                        <span>Posted: <p>{{post.created_at|timesince }} ago</p></span>
+                        <span>Intake: <p>{{post.intake }}</p></span>
+                    </div>
+                    {% if request.user.is_jobseeker and user_hirer.id is post.id %}
+                        <div class="box-btn">
+                            <a href=""><button class="save" value="Save">Save</button></a>
+                            <a href=""><button class="apply" value="Apply">Apply</button></a>
+                        </div>                      
+                    {% else %}
+                        <div class="box-btn">
+                            <a href="{% url 'update-post' post.id %}"><button class="edit">Edit</button></a>
+                            <a href="{% url 'delete-post' post.id %}"><button class="delete">Delete</button></a>
+                        </div> 
+                    {% endif %}
+                </div>
+            </div>
+            <div class="box-two">
+                <div class="box-two-content">
+                    <h2>Job Description</h2>
+                    <div class="job-purpose">
+                        <h3>Job Purpose:</h3>
+                        <ul>
+                            {% for item in purposeDatas %}
+                            <li>{{item}}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                <div class="box-two-content">
+                    <span>Experience: </span>
+                    <p>{{post.experience}}</p>
+                </div>
+                <div class="box-two-content">
+                    <span>Role Category: </span>
+                    <p>{{post.role}}</p>
+                </div>
+                <div class="box-two-content">
+                    <span>Industry Type: </span>
+                    <p>{{post.industry_type}}</p>
+                </div>
+                <div class="box-two-content">
+                    <span>Department: </span>
+                    <p>{{post.department}}</p>
+                </div>
+                <div class="box-two-content">
+                    <span>Employment Type: </span>
+                    <p>{{post.employee_type}}</p>
+                </div>
+                <div class="box-two-content">
+                    <span>Education: </span>
+                    <p>{{post.education}}</p>
+                </div>
+                <hr>
+                <div class="social-media">
+                    <a href="" id="facebook"><i class="fa-brands fa-square-facebook"></i></a>
+                    <a href="" id="linkedin"><i class="fa-brands fa-linkedin"></i></a>
+                    <a href="" id="twitter"><i class="fa-brands fa-twitter"></i></a>
+                </div>
+            </div>
+            <div class="box-four">
+                <div class="about-company">
+                    <h3>About Company</h3>
+                    <p>{{aboutData|safe}}</p>
+                </div>
+                <div class="company-address">
+                    <h3>Company Address</h3>
+                    <p>{{company_address.street_address}}, {{company_address.city}}, {{company_address.state}}, {{company_address.postal_code}}, {{company_address.country}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="container-content-two">
+            <div class="box-three">
+                <div class="job-highlight">
+                    <h3>Job Highlights</h3>
+                    <div class="content-job-highlight">
+                        <ul>
+                            {% for item in highlightDatas %}
+                            <li>{{item}}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                <div class="skills-required">
+                    <h3>Skills Required</h3>
+                    <div class="content-skills-required">
+                        {% for item in skills %}
+                        <div>{{item}}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

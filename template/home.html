@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JobPortal | Home</title>
+    {% load static %}
+    <!-- <link rel="stylesheet" href="{% static 'css/index.css' %}"> -->
+    <script src="https://kit.fontawesome.com/437000937b.js" crossorigin="anonymous"></script>
+    {% load static %}
+    <link rel="shortcut icon" href="{% static 'img/favicon-bg.jpg' %}" type="image/x-icon">
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background-color: #F8F9FA;
+        }
+
+        #greeting-head{
+            font-size: 2rem;
+            text-align: center;
+            margin-top: 0.7em;
+        }
+        .greeting-user{
+            color: rgb(0, 85, 255);
+        }
+
+        .container {
+            height: 100%;
+            display: flex;
+            align-items: start;
+            justify-content: center;
+            gap: 2em;
+            padding: 2em 0;
+        }
+
+        .profile-card {
+            background-color: #FFFFFF;
+            /* height: 100%; */
+            display: flex;
+            flex-direction: column;
+            /* justify-content: space-around; */
+            align-items: center;
+            border: 1px solid rgb(213, 213, 213);
+            width: 260px;
+            padding: 50px 0;
+            border-radius: 12px;
+        }
+        .profile-card:hover{
+            box-shadow: 0px 0px 40px 5px rgba(213, 213, 213, 0.753);
+            cursor: pointer;
+        }
+        .profile-img {
+            display: inline-block;
+            position: relative;
+        }
+
+        .profile-img img {
+            max-width: 120px;
+            height: 100px;
+            border-radius: 50%;
+        }
+
+        .percentage {
+            font-size: 1rem;
+            margin-right: auto;
+            padding-left: 16px;
+            margin-top: 12px;
+        }
+
+        .timeline {
+            position: relative;
+            height: 10px;
+            background-color: rgb(195, 195, 195);
+            border-radius: 12px;
+            width: 90%;
+        }
+
+        .profile-name {
+            font-size: 1.2rem;
+        }
+
+        #percentage-timeline {
+            width: 0;
+            height: 100%;
+            border-radius: 12px;
+            background-color: rgb(0, 85, 255);
+            /* Adjust the color as needed */
+            position: absolute;
+        }
+
+        .profile-btn {
+            background-color: rgb(0, 85, 255);
+            padding: 6px 10px;
+            border-radius: 12px;
+            cursor: pointer;
+            border: 1px solid black;
+            font-size: 1rem;
+            color: white;
+            margin-top: 20px;
+        }
+
+        .hero-container {
+            display: flex;
+            flex-direction: column;
+            gap: 2em;
+        }
+
+        .dashboard {
+            background-color: #FFFFFF;
+            border: 1px solid rgb(213, 213, 213);
+            border-radius: 12px;
+            padding: 30px 45px;
+        }
+        .dashboard:hover{
+            box-shadow: 0px 0px 40px 5px rgba(213, 213, 213, 0.753);
+            cursor: pointer;
+        }
+
+        .dashboard h3 {
+            font-size: 1.5rem;
+        }
+
+        .dashboard-box-content {
+            /* background-color: green; */
+            display: flex;
+            gap: 2em;
+        }
+
+        .dashboard-box {
+            /* background-color: aqua; */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 0.7em;
+            border-radius: 12px;
+            border: 1px solid rgb(213, 213, 213);
+            margin: 12px 0;
+            width: 250px;
+            height: 100px;
+        }
+
+        .dashboard-box:hover {
+            cursor: pointer;
+            box-shadow: 0px 0px 25px rgba(213, 213, 213, 0.753);
+        }
+
+        .dashboard-box h4 {
+            font-size: 1.1rem;
+        }
+
+        .dashboard-box span {
+            font-size: 2rem;
+        }
+
+        .recommendation {
+            display: flex;
+            flex-direction: column;
+            background-color: #FFFFFF;
+            border: 1px solid rgb(213, 213, 213);
+            border-radius: 12px;
+            padding: 30px 45px;
+        }
+        .recommendation:hover{
+            box-shadow: 0px 0px 40px 5px rgba(213, 213, 213, 0.753);
+            cursor: pointer;
+        }
+
+        .recommended-head {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .recommended-head h3 {
+            font-size: 1.5rem;
+            padding: 6px 0;
+        }
+
+        .recommended-head a {
+            text-decoration: none;
+            color: rgb(0, 85, 255);
+            font-size: 1.1rem;
+        }
+
+        .recommendation-box-content {
+            display: flex;
+            justify-content: left;
+            align-items: center;
+            gap: 3em;
+        }
+
+        .recommendation-box {
+            background-color: #FFFFFF;
+            border: 1px solid rgb(213, 213, 213);
+            border-radius: 12px;
+            width: 225px;
+        }
+
+        .recommendation-box:hover {
+            cursor: pointer;
+            box-shadow: 0px 0px 25px rgba(213, 213, 213, 0.753);
+        }
+
+        .box-head {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 12px;
+        }
+
+        .box-head img {
+            width: 50px;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .box-head span {
+            font-size: 0.9rem;
+            color: grey;
+        }
+
+        .box-content {
+            padding: 2px 12px;
+        }
+
+        .box-content h3 {
+            font-size: 1.2rem;
+        }
+
+        .box-content p {
+            margin: 3px 0;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- <nav> -->
+    {% include "nav.html" %}
+    <!-- </nav> -->
+
+    <h2 id="greeting-head">
+        <span id="greeting"></span>
+        {% if user_job_seeker %}
+        <span class="greeting-user">{{user_job_seeker.user.name}}!</span>
+        {% else %}
+        <span class="greeting-user">{{user_hirer.user.name}}!</span>
+        {% endif %}
+    </h2>
+    
+    <div class="container">
+        <div class="profile-card">
+            <div class="profile-img">
+                {% if user_job_seeker %}
+                <img src="{{user_job_seeker.profile_image.url}}" alt="Profile Image">
+                {% else %}
+                <img src="{{user_hirer.profile_image.url}}" alt="Profile Image">
+                {% endif %}
+            </div>
+            <div class="profile-name">
+                {% if user_job_seeker %}
+                <h3>{{user_job_seeker.user.name}}</h3>
+                {% else %}
+                <h3>{{user_hirer.user.name}}</h3>
+                {% endif %}
+
+            </div>
+            <div class="percentage">
+                <span>Profile {{percentage_user| floatformat:2}}% Completed</span>
+            </div>
+
+            <div class="timeline">
+                <div id="percentage-timeline" style="width: {{percentage_user}}%;"></div>
+            </div>
+            {% if percentage_user != 100 %}
+            <a href="{% url 'profile' %}"><button class="profile-btn">Complete Profile</button></a>
+            {% else %}
+            <a href="{% url 'profile' %}"><button class="profile-btn">Update Profile</button></a>
+            {% endif %}
+        </div>
+
+
+        <div class="hero-container">
+
+
+            {% if user_job_seeker %}
+            <div class="dashboard">
+                <h3>Dashboard</h3>
+                <div class="dashboard-box-content">
+                    <div class="dashboard-box">
+                        <h4>Total Applied Jobs</h4>
+                        <span>5</span>
+                    </div>
+                    <div class="dashboard-box">
+                        <h4>Total Hirer Contacted</h4>
+                        <span>5</span>
+                    </div>
+                    <div class="dashboard-box">
+                        <h4>Total Hired</h4>
+                        <span>5</span>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="recommendation">
+                <div class="recommended-head">
+                    <h3>Recommended Jobs</h3>
+                    <a href=""><span>View all</span></a>
+                </div>
+                <div class="recommendation-box-content">
+                    <div class="recommendation-box">
+                        <div class="box-head">
+                            <img src="{{user_job_seeker.profile_image.url}}" alt="Company Image" width="65" height="50">
+                            <span>23h ago</span>
+                        </div>
+                        <div class="box-content">
+                            <h3>Subject</h3>
+                            <span>Company Name</span>
+                            <p>Country Name</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% else %}
+
+            <div class="dashboard">
+                <h3>Dashboard</h3>
+                <div class="dashboard-box-content">
+                    <div class="dashboard-box">
+                        <h4>Total Jobs Posted</h4>
+                        <span>5</span>
+                    </div>
+                    <div class="dashboard-box">
+                        <h4>Total Job Seekers Applied</h4>
+                        <span>5</span>
+                    </div>
+                    <div class="dashboard-box">
+                        <h4>Total Hired</h4>
+                        <span>5</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="recommendation">
+                <div class="recommended-head">
+                    <h3>Recommended Job Seekers</h3>
+                    <a href=""><span>View all</span></a>
+                </div>
+                <div class="recommendation-box-content">
+                    <div class="recommendation-box">
+                        <div class="box-head">
+                            <img src="{{user_hirer.profile_image.url}}" alt="Company Image">
+                            <span>23h ago</span>
+                        </div>
+                        <div class="box-content">
+                            <h3>User name</h3>
+                            <span>skills</span>
+                            <p>country name</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+
+
+
+
+    <script>
+        var currentTime = new Date().getHours();
+        var greeting;
+
+        if (currentTime >= 5 && currentTime < 12) {
+            greeting = "Good Morning, ";
+        } else if (currentTime >= 12 && currentTime < 18) {
+            greeting = "Good Afternoon, ";
+        } else {
+            greeting = "Good Evening, ";
+        }
+
+        var greetingElement = document.getElementById("greeting");
+        greetingElement.textContent = greeting;
+    </script>
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <h1>Welcome</h1>
+
+{% if user.is_authenticated %}
+    {% comment %} <a href="{% url 'profile' username=user.username %}">{{ user.username }}</a> <br>  {% endcomment %}
+    <a href="{% url 'profile' %}">Profile</a> <br>
+    <a href="{% url 'logout' %}">Logout</a> <br>
+{% else %}
+    <a href="{% url 'register' %}">Register</a> <br>
+    <a href="{% url 'login' %}">Login</a> 
+{% endif %} -->

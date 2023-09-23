@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Post</title>
+    <script src="https://kit.fontawesome.com/437000937b.js" crossorigin="anonymous"></script>
+    {% load static %}
+    <link rel="shortcut icon" href="{% static 'img/favicon-bg.jpg' %}" type="image/x-icon">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/createPost.css' %}">
+</head>
+
+<body>
+    {% include "nav.html" %}
+    <form method="post">
+        <h2>Post a Job</h2>
+        {% csrf_token %}
+            {{ form.as_p }}
+        <div class="btn">
+            <button type="submit" id="submit">Post</button>
+            <button type="reset" id="clear">Clear</button>
+        </div>
+    </form>
+
+    <script>
+        let skills = document.getElementById('id_skills_requirement');
+        skills.setAttribute('placeholder', 'Enter Skills Separated by "," (comma) only!')
+    </script>
+</body>
+
+</html>
