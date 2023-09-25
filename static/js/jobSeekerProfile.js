@@ -6,6 +6,7 @@ let technicalForm = document.getElementsByClassName('technicalForm');
 let addressForm = document.getElementsByClassName('addressForm');
 let educationForm = document.getElementsByClassName('educationForm');
 let experienceForm = document.getElementsByClassName('experienceForm');
+let socialForm = document.getElementsByClassName('socialForm');
 
 let dateEdu = document.getElementsByClassName('dateEdu');
 let dateTextEdu = document.getElementsByClassName('dateTextEdu');
@@ -74,6 +75,13 @@ for (let i = 0; i < edit.length; i++) {
                 }
             }
         }
+        else if (i == 5) {
+            for (var j = 0; j < socialForm.length; j++) {
+                socialForm[j].removeAttribute('disabled');
+                socialForm[j].classList.add('bg');
+                socialForm[j].classList.remove('nobg');
+            }
+        }
         else {
             console.log(Error);
         }
@@ -88,7 +96,7 @@ let add = document.getElementsByClassName('add');
 let inputEdu = document.getElementsByClassName('inputEdu');
 let inputExp = document.getElementsByClassName('inputExp');
 
-add[0].addEventListener("click", ()=>{
+add[0].addEventListener("click", () => {
     document.getElementById('submitEdu').style.display = 'block';
     add[0].style.display = 'none';
     for (let j = 0; j < inputEdu.length; j++) {
@@ -96,7 +104,7 @@ add[0].addEventListener("click", ()=>{
     }
 });
 
-add[1].addEventListener("click", ()=>{
+add[1].addEventListener("click", () => {
     document.getElementById('submitExp').style.display = 'block';
     add[1].style.display = 'none';
     for (let j = 0; j < inputExp.length; j++) {
@@ -115,6 +123,8 @@ for (let i = 0; i < radio.length; i++) {
             document.getElementById("addressData").style.display = 'none';
             document.getElementById("educationData").style.display = 'none';
             document.getElementById("experienceData").style.display = 'none';
+            document.getElementById("experienceData").style.display = 'none';
+            document.getElementById("socialData").style.display = 'none';
         }
         else if (radio[i].id == 'technical') {
             document.getElementById("basicData").style.display = 'none';
@@ -122,6 +132,7 @@ for (let i = 0; i < radio.length; i++) {
             document.getElementById("addressData").style.display = 'none';
             document.getElementById("educationData").style.display = 'none';
             document.getElementById("experienceData").style.display = 'none';
+            document.getElementById("socialData").style.display = 'none';
         }
         else if (radio[i].id == 'address') {
             document.getElementById("basicData").style.display = 'none';
@@ -129,6 +140,7 @@ for (let i = 0; i < radio.length; i++) {
             document.getElementById("addressData").style.display = 'block';
             document.getElementById("educationData").style.display = 'none';
             document.getElementById("experienceData").style.display = 'none';
+            document.getElementById("socialData").style.display = 'none';
         }
         else if (radio[i].id == 'education') {
             document.getElementById("basicData").style.display = 'none';
@@ -136,13 +148,23 @@ for (let i = 0; i < radio.length; i++) {
             document.getElementById("addressData").style.display = 'none';
             document.getElementById("educationData").style.display = 'block';
             document.getElementById("experienceData").style.display = 'none';
+            document.getElementById("socialData").style.display = 'none';
+        }
+        else if (radio[i].id == 'experience') {
+            document.getElementById("basicData").style.display = 'none';
+            document.getElementById("technicalData").style.display = 'none';
+            document.getElementById("addressData").style.display = 'none';
+            document.getElementById("educationData").style.display = 'none';
+            document.getElementById("experienceData").style.display = 'block';
+            document.getElementById("socialData").style.display = 'none';
         }
         else {
             document.getElementById("basicData").style.display = 'none';
             document.getElementById("technicalData").style.display = 'none';
             document.getElementById("addressData").style.display = 'none';
             document.getElementById("educationData").style.display = 'none';
-            document.getElementById("experienceData").style.display = 'block';
+            document.getElementById("experienceData").style.display = 'none';
+            document.getElementById("socialData").style.display = 'block';
         }
     });
 }
@@ -158,11 +180,11 @@ profileImage.addEventListener('mouseover', () => {
 });
 
 profileImage.addEventListener('mouseout', () => {
-    profileImage.style.transform = 'scale(1)'; 
+    profileImage.style.transform = 'scale(1)';
 });
 
 profileImage.addEventListener('click', () => {
-    imageInput.click(); 
+    imageInput.click();
 });
 
 imageInput.addEventListener('change', () => {

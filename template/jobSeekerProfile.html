@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
-    
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Online Job Portal | User Profile | Job Seeker | {{user_job_seeker.user.username}}</title>
-        {% load static %}
-        <link rel="stylesheet" href='{% static "css/jobSeekerProfile.css" %}'>
-        {% load static %}
-        <link rel="shortcut icon" href="{% static 'img/favicon-bg.jpg'' %}" type="image/x-icon">
-    </head>    
-<body>    
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Job Portal | User Profile | Job Seeker | {{user_job_seeker.user.username}}</title>
+    {% load static %}
+    <link rel="stylesheet" href='{% static "css/jobSeekerProfile.css" %}'>
+    {% load static %}
+    <link rel="shortcut icon" href="{% static 'img/favicon-bg.jpg'' %}" type="image/x-icon">
+</head>
+
+<body>
     {% include "nav.html" %}
 
     <div class="container">
@@ -29,6 +30,20 @@
             {% if user_job_seeker_address %}
             <p id="locationDisplay"><i class="fa-solid fa-location-dot"></i> {{ user_job_seeker_address.country }}</p>
             {% endif %}
+            <div class="social-media">
+                {% if user_job_seeker_social_media.facebook_url %}
+                <a href="{{user_job_seeker_social_media.facebook_url}}" target="_blank" id="facebook"><i
+                        class="fa-brands fa-square-facebook"></i></a>
+                {% endif %}
+                {% if user_job_seeker_social_media.linkedin_url %}
+                <a href="{{user_job_seeker_social_media.linkedin_url}}" target="_blank" id="linkedin"><i
+                        class="fa-brands fa-linkedin"></i></a>
+                {% endif %}
+                {% if user_job_seeker_social_media.twitter_url %}
+                <a href="{{user_job_seeker_social_media.twitter_url}}" target="_blank" id="twitter"><i
+                        class="fa-brands fa-twitter"></i></a>
+                {% endif %}
+            </div>
         </div>
         <div class="profile-info">
             <div class="menuRadio">
@@ -42,6 +57,8 @@
                 <label for="education">Education</label>
                 <input type="radio" name="menu" id="experience">
                 <label for="experience">Experience</label>
+                <input type="radio" name="menu" id="social">
+                <label for="social">Social Media</label>
             </div>
             <div id="basicData">
                 <form method="POST">
@@ -108,8 +125,8 @@
                         </tr>
                         <tr>
                             <th><label for="id_resume">Resume</label></th>
-                            {% if user_job_seeker.file %}
-                            <td id="resumeStatus"><a href="{{user_job_seeker.file.url}}" target="_blank">View</a></td>
+                            {% if user_job_seeker.resume %}
+                            <td id="resumeStatus"><a href="{{user_job_seeker.resume.url}}" target="_blank">View</a></td>
                             {% else %}
                             <td id="resumeStatus">Resume Not Uploaded!</td>
                             {% endif %}
@@ -215,7 +232,7 @@
                         hidden>Save</button>
                 </form>
                 <!-- <button class="edit"><i class="fa-solid fa-pen"></i>Edit</button> -->
-                <button class="add"><i class="fa-solid fa-plus"></i>Add</button>
+                <button class="edit add"><i class="fa-solid fa-plus"></i>Add</button>
             </div>
             <div id="experienceData">
                 <form method="POST">
@@ -278,8 +295,33 @@
                     <button type="submit" id="submitExp" class="submit" name="form5_submit" value="Submit Form 5"
                         hidden>Save</button>
                 </form>
-                <button class="add"><i class="fa-solid fa-plus"></i>Add</button>
+                <button class="edit add"><i class="fa-solid fa-plus"></i>Add</button>
             </div>
+            <div id="socialData">
+                <form method="POST">
+                    {% csrf_token %}
+                    <table>
+                        <tr>
+                            <th><label for="id_facebook">Facebook URL</label></th>
+                            <td><input class="socialForm nobg" type="url" name="facebook" id="id_facebook"
+                                    value="{{ user_job_seeker_social_media.facebook_url }}" disabled></td>
+                        </tr>
+                        <tr>
+                            <th><label for="id_linkedin">LinkedIn URL</label></th>
+                            <td><input class="socialForm nobg" type="url" name="linkedin" id="id_linkedin"
+                                    value="{{ user_job_seeker_social_media.linkedin_url }}" disabled></td>
+                        </tr>
+                        <tr>
+                            <th><label for="id_twitter">Twitter URL</label></th>
+                            <td><input class="socialForm nobg" type="url" name="twitter" id="id_twitter"
+                                    value="{{ user_job_seeker_social_media.twitter_url }}" disabled></td>
+                        </tr>
+                    </table>
+                    <button type="submit" class="submit" name="form6_submit" value="Submit Form 6" hidden>Save</button>
+                </form>
+                <button class="edit"><i class="fa-solid fa-pen"></i>Edit</button>
+            </div>
+
         </div>
 
         {% else %}

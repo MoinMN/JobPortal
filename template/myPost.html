@@ -29,10 +29,10 @@
                     <div class="box-head">
                         <div class="box-title">
                             <h3 title="Title">{{post.title}}</h3>
-                            <h5 title="Company Name">{{post.hire.company_name}}</h5>
+                            <h5 title="Company Name">{{post.hirer.company_name}}</h5>
                         </div>
                         <div class="box-img">
-                            <img title="Company Profile Image" src="{{ post.hire.profile_image.url }}" alt="Company Image">
+                            <img title="Company Profile Image" src="{{ post.hirer.profile_image.url }}" alt="Company Image">
                         </div>
                     </div>
                     <div class="box-list">
@@ -71,20 +71,16 @@
         for (let i = 0; i < classSkills.length; i++) {
             let result = '';
             let skills = classSkills[i].innerHTML;
-            console.log(skills)
 
             skill = skills.split(',');
-            console.log(skill)
 
             for (let j = 0; j < skill.length; j++) {
                 result = result + skill[j] + " • ";
-                console.log(result)
             }
             classSkills[i].innerHTML = result.slice(0, -2);
         }
 
     </script>
-
 </body>
 
 </html>

@@ -268,8 +268,8 @@ hr {
     font-size: 1rem;
     margin: 12px 0;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: start;
+    align-items: start;
     flex-wrap: wrap;
 }
 

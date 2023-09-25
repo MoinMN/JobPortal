@@ -19,7 +19,10 @@
         body {
             background-color: #F8F9FA;
         }
-
+        #greeting-head span::selection {
+            background-color: black;
+            color: yellow;
+        }
         #greeting-head{
             font-size: 2rem;
             text-align: center;
@@ -47,7 +50,8 @@
             align-items: center;
             border: 1px solid rgb(213, 213, 213);
             width: 260px;
-            padding: 50px 0;
+            padding: 25px 0;
+            height: 100%;
             border-radius: 12px;
         }
         .profile-card:hover{
@@ -71,6 +75,10 @@
             padding-left: 16px;
             margin-top: 12px;
         }
+        .percentage p span{
+            font-weight: 700;
+            color: rgb(0, 85, 255);
+        }
 
         .timeline {
             position: relative;
@@ -83,25 +91,27 @@
         .profile-name {
             font-size: 1.2rem;
         }
-
         #percentage-timeline {
             width: 0;
+            left: 0;
             height: 100%;
             border-radius: 12px;
             background-color: rgb(0, 85, 255);
-            /* Adjust the color as needed */
             position: absolute;
+            transition: width 1500ms ease-in-out;
         }
-
         .profile-btn {
             background-color: rgb(0, 85, 255);
             padding: 6px 10px;
-            border-radius: 12px;
+            border-radius: 8px;
             cursor: pointer;
-            border: 1px solid black;
+            border: 2px solid rgb(0, 85, 255);
             font-size: 1rem;
             color: white;
-            margin-top: 20px;
+            transition: background-color 600ms ease;
+        }
+        .profile-btn:hover{
+            background-color: #2970fd;
         }
 
         .hero-container {
@@ -235,6 +245,30 @@
             margin: 3px 0;
             font-size: 0.9rem;
         }
+        .incomplete{
+            background-color: rgba(236, 242, 255, 0.811);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 16px 0;
+            padding: 12px 8px;
+            border-radius: 12px;
+        }
+        .incomplete h3{
+            font-size: 1.2rem;
+            /* padding: 8px 0; */
+        }
+        .incomplete-content{
+            padding: 12px;
+            font-size: 1rem;
+        }
+        .incomplete-content .incomplete-box{
+            line-height: 1.3em;
+        }
+        .incomplete-content .incomplete-box i{
+            padding: 0 5px;
+        }
     </style>
 </head>
 
@@ -267,20 +301,98 @@
                 {% else %}
                 <h3>{{user_hirer.user.name}}</h3>
                 {% endif %}
-
             </div>
             <div class="percentage">
-                <span>Profile {{percentage_user| floatformat:2}}% Completed</span>
+                <p>Profile <span>{{percentage_user|floatformat:2}}%</span> Completed</p>
             </div>
 
             <div class="timeline">
-                <div id="percentage-timeline" style="width: {{percentage_user}}%;"></div>
+                <!-- <div id="percentage-timeline" style="width: {{percentage_user}}%;"></div> -->
+                <div id="percentage-timeline"></div>
             </div>
-            {% if percentage_user != 100 %}
-            <a href="{% url 'profile' %}"><button class="profile-btn">Complete Profile</button></a>
-            {% else %}
-            <a href="{% url 'profile' %}"><button class="profile-btn">Update Profile</button></a>
-            {% endif %}
+
+            <div class="incomplete">
+                {% if percentage_user != 100 %}
+                    <h3>What are you missing?</h3>
+                {% endif %}
+                <div class="incomplete-content">
+                    {% if request.user.is_jobseeker %}
+
+                        {% if user_job_seeker.about is None or not user_job_seeker.about %}
+                            <div class="incomplete-box">
+                                <i class="fa-solid fa-clipboard-question"></i>
+                                <span>Complete About me</span>
+                            </div>
+                        {% endif %}
+                        {% if user_job_seeker.profile_image.name == "profile_images/defaultProfileImage.png" %}
+                            <div class="incomplete-box">
+                                <i class="fa-solid fa-image-portrait"></i>
+                                <span>Upload your picture</span>
+                            </div>
+                        {% endif %}
+                        {% if user_job_seeker.skills == 'None' or not user_job_seeker.skills %}
+                            <div class="incomplete-box">
+                                <i class="fa-solid fa-clipboard-question"></i>
+                                <span>Add your skills</span>
+                            </div>
+                        {% endif %}
+                        {% if not user_job_seeker.resume  %}
+                            <div class="incomplete-box">
+                                <i class="fa-solid fa-file-pdf"></i>
+                                <span>Upload Resume</span>
+                            </div>
+                        {% endif %}
+                        {% if not user_job_seeker_address  %}
+                            <div class="incomplete-box">
+                                <i class="fa-solid fa-clipboard-question"></i>
+                                <span>Add your address</span>
+                            </div>
+                        {% endif %}
+                        {% if not user_job_seeker_first_education  %}
+                            <div class="incomplete-box">
+                                <i class="fa-solid fa-clipboard-question"></i>
+                                <span>Add your Education</span>
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        {% if not user_hirer.company_name or user_hirer.company_name == 'None' %}
+                            <div class="incomplete-box">
+                                <i class="fa-solid fa-clipboard-question"></i>
+                                <span>Add your company name</span>
+                            </div>
+                        {% endif %}
+                        {% if user_hirer.about_company == 'None' or not user_hirer.about_company %}
+                            <div class="incomplete-box">
+                                <i class="fa-solid fa-clipboard-question"></i>
+                                <span>Add about your company</span>
+                            </div>
+                        {% endif %}
+                        {% if user_hirer.profile_image.name == "profile_images/defaultProfileImage.png" %}
+                            <div class="incomplete-box">
+                                <i class="fa-solid fa-image-portrait"></i>
+                                <span>Upload your picture</span>
+                            </div>
+                        {% endif %}
+                        {% if not user_hirer_address %}
+                       <div class="incomplete-box">
+                                <i class="fa-solid fa-clipboard-question"></i>
+                                <span>Add your company address</span>
+                            </div>
+                        {% endif %}
+
+
+                    {% endif %}
+                </div>
+
+                <div class="incomplete-btn">
+                    {% if percentage_user != 100 %}
+                    <a href="{% url 'profile' %}"><button class="profile-btn">Complete Profile</button></a>
+                    {% else %}
+                    <a href="{% url 'profile' %}"><button class="profile-btn">Update Profile</button></a>
+                    {% endif %}
+                </div>
+            </div>
+
         </div>
 
 
@@ -388,6 +500,15 @@
 
         var greetingElement = document.getElementById("greeting");
         greetingElement.textContent = greeting;
+
+        let percentageTimeline = document.getElementById('percentage-timeline');
+        setInterval(() => {
+            percentageTimeline.style.width = {{percentage_user}}+'%';
+        }, 1500);
+
+        if ({{percentage_user}} == 100){
+            document.getElementsByClassName('incomplete')[0].style.backgroundColor = 'transparent';
+        }
     </script>
 </body>
 

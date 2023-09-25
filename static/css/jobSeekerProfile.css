@@ -46,11 +46,11 @@ nav .right span a {
     text-decoration: none;
 }
 
-#profile{
+#profile {
     color: white;
 }
 
-#logout{
+#logout {
     color: black;
 }
 
@@ -101,7 +101,7 @@ input[type="radio"]:checked+label {
     border: 2px solid rgba(214, 214, 214, 0.577);
     border-radius: 6px;
     font-size: 1.1rem;
-    width: 45%;
+    width: 60%;
 }
 
 .container .profile-info .menuRadio {
@@ -131,7 +131,8 @@ input[type="radio"]:checked+label {
     width: 75%;
 }
 
-.container .profile-info table th, td {
+.container .profile-info table th,
+td {
     border-bottom: 2px solid grey;
 }
 
@@ -182,13 +183,14 @@ input::-webkit-inner-spin-button {
 #technicalData,
 #addressData,
 #educationData,
-#experienceData {
+#experienceData,
+#socialData {
     display: none;
 }
 
 .dateEdu,
-.dateExp, 
-#dateDet{
+.dateExp,
+#dateDet {
     padding: 18px 0;
     display: none;
 }
@@ -198,11 +200,13 @@ input::-webkit-inner-spin-button {
 #dateTextDet input {
     border: none;
 }
-#skillsInput{
+
+#skillsInput {
     display: none;
     padding: 20px 0;
 }
-#skillsOutput span{
+
+#skillsOutput span {
     background-color: rgb(0, 102, 255);
     color: white;
     padding: 2px 5px;
@@ -210,16 +214,58 @@ input::-webkit-inner-spin-button {
 }
 
 .inputEdu,
-.inputExp{
+.inputExp {
     display: none;
     padding: 20px 0;
 }
 
-#profile-img{
+#profile-img {
     transition: transform 0.5s ease;
     cursor: pointer;
 }
 
-#resumeStatus a{
+#resumeStatus a {
     color: black;
+}
+
+.social-media {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    margin: 12px 0;
+}
+
+.social-media a {
+    text-decoration: none;
+}
+
+.social-media a i {
+    font-size: 2rem;
+}
+
+.social-media #facebook {
+    color: #3975EA;
+    transition: color 500ms ease-in-out;
+}
+
+.social-media #facebook:hover {
+    color: #1160ff;
+}
+
+.social-media #linkedin {
+    color: #2D64BC;
+    transition: color 500ms ease-in-out;
+}
+
+.social-media #linkedin:hover {
+    color: #1655b9;
+}
+
+.social-media #twitter {
+    color: #4A99E9;
+    transition: color 500ms ease-in-out;
+}
+
+.social-media #twitter:hover {
+    color: #157be0;
 }

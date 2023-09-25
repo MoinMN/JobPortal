@@ -1,7 +1,7 @@
 from nltk.tokenize import sent_tokenize
 from django.shortcuts import redirect, render, get_object_or_404
 from django.http import HttpResponseForbidden
-from App.models import Hirer, JobSeeker, JobSeekerAddress, JobSeekerEducation, JobSeekerWorkExperience, HirerPost, HirerAddress, User
+from App.models import Hirer, JobSeeker, JobSeekerAddress, JobSeekerEducation, JobSeekerWorkExperience, HirerPost, HirerAddress, User, HirerSocialMedia, JobSeekerSocialMedia, JobApplication
 from .models import ContactUs
 from App.models import HirerPost
 from django.contrib.auth.decorators import login_required
@@ -10,7 +10,8 @@ from App.form import PostForm
 
 import nltk
 
-nltk.download('punkt')
+# nltk.download('punkt')
+# nltk.download('punkt', download_dir=False)
 
 
 
@@ -40,7 +41,6 @@ def landingPage(request):
 
 @login_required
 def view_profile(request, username):
-
     user_profile = User.objects.get(username=username)
 
     if user_profile.is_jobseeker:
@@ -77,15 +77,14 @@ def view_profile(request, username):
 @login_required(login_url='../account/login')
 def home(request):
     if request.user.is_jobseeker:
+        user = User.objects.get(id=request.user.id)
         user_job_seeker = JobSeeker.objects.get(user=request.user)
-        user_job_seeker_address = JobSeekerAddress.objects.filter(
-            jobSeeker=user_job_seeker).first()
+        user_job_seeker_address = JobSeekerAddress.objects.filter(jobSeeker=user_job_seeker).first()
 
-        user_job_seeker_first_education = JobSeekerEducation.objects.filter(
-            jobSeeker=user_job_seeker).first()
-        user_job_seeker_first_experience = JobSeekerWorkExperience.objects.filter(
-            jobSeeker=user_job_seeker).first()
+        user_job_seeker_first_education = JobSeekerEducation.objects.filter(jobSeeker=user_job_seeker).first()
+        user_job_seeker_first_experience = JobSeekerWorkExperience.objects.filter(jobSeeker=user_job_seeker).first()
 
+        user_completeness_percentage = user.calculate_user_completeness()
         completeness_percentage_user_job_seeker = user_job_seeker.calculate_jobseeker_completeness()
         if user_job_seeker_address:
             completeness_percentage_user_job_seeker_address = user_job_seeker_address.calculate_jobseekeraddress_completeness()
@@ -97,36 +96,35 @@ def home(request):
         else:
             completeness_percentage_user_job_seeker_first_education = 0
 
-        if user_job_seeker_first_experience:
-            completeness_percentage_user_job_seeker_first_experience = user_job_seeker_first_experience.calculate_jobseekerworkexperience_completeness()
-        else:
-            completeness_percentage_user_job_seeker_first_experience = 0
-
-        percentage_user = (completeness_percentage_user_job_seeker + completeness_percentage_user_job_seeker_address +
-                           completeness_percentage_user_job_seeker_first_education + completeness_percentage_user_job_seeker_first_experience) / 4
+        percentage_user = (user_completeness_percentage + completeness_percentage_user_job_seeker + completeness_percentage_user_job_seeker_address +
+                           completeness_percentage_user_job_seeker_first_education ) / 4
 
         context = {
             'user_job_seeker': user_job_seeker,
+            'user_job_seeker_address': user_job_seeker_address,
+            'user_job_seeker_first_education': user_job_seeker_first_education,
+
             'percentage_user': percentage_user,
         }
 
         return render(request, 'home.html', context)
 
     else:
+        user = User.objects.get(id=request.user.id)
         user_hirer = Hirer.objects.get(user=request.user)
-        user_hirer_address = HirerAddress.objects.filter(
-            hirer=user_hirer).first()
-
+        user_hirer_address = HirerAddress.objects.filter(hirer=user_hirer).first()
+        
+        user_completeness_percentage = user.calculate_user_completeness()
         completeness_percentage_user_hirer = user_hirer.calculate_hirer_completeness()
         if user_hirer_address:
             completeness_percentage_user_hirer_address = user_hirer_address.calculate_hireraddress_completeness()
         else:
             completeness_percentage_user_hirer_address = 0
-        percentage_user = (completeness_percentage_user_hirer +
-                           completeness_percentage_user_hirer_address) / 2
+        percentage_user = (user_completeness_percentage + completeness_percentage_user_hirer + completeness_percentage_user_hirer_address) / 3
 
         context = {
             'user_hirer': user_hirer,
+            'user_hirer_address': user_hirer_address,
             'percentage_user': percentage_user,
         }
 
@@ -139,7 +137,7 @@ def create_post(request):
         form = PostForm(request.POST)
         if form.is_valid():
             hirer_post = form.save(commit=False)
-            hirer_post.hire = request.user.hirer
+            hirer_post.hirer = request.user.hirer
             hirer_post.save()
             return redirect('my-post')
     else:
@@ -152,7 +150,7 @@ def create_post(request):
 def update_post(request, post_id):
     post = get_object_or_404(HirerPost, id=post_id)
 
-    if request.user != post.hire.user:
+    if request.user != post.hirer.user:
         return HttpResponseForbidden("You do not have permission to edit this post.")
 
     if request.method == 'POST':
@@ -171,7 +169,7 @@ def update_post(request, post_id):
 def delete_post(request, post_id):
     post = get_object_or_404(HirerPost, id=post_id)
 
-    if request.user == post.hire.user:
+    if request.user == post.hirer.user:
         post.delete()
         return redirect('my-post')
     else:
@@ -183,8 +181,9 @@ def post_view(request, post_id):
     post = get_object_or_404(HirerPost, id=post_id)
     user_hirer = Hirer.objects.get(user=request.user)
     companyAddress = HirerAddress.objects.filter(hirer=user_hirer).first()
+    socialMedia = HirerSocialMedia.objects.filter(hirer=user_hirer).first()
 
-    if request.user != post.hire.user:
+    if request.user != post.hirer.user:
         return HttpResponseForbidden("You do not have permission to view this post.")
 
     aboutData = user_hirer.about_company
@@ -192,7 +191,7 @@ def post_view(request, post_id):
     highlight = post.job_highlights
     skills = post.skills_requirement.split(',')
 
-    if '.' in aboutData:
+    if '.' in aboutData and not aboutData is None:
         aboutData = "<p>" + "<br>".join(aboutData.split("\n")) + "</p>"
 
     purposeDatas = sent_tokenize(purpose)
@@ -203,6 +202,7 @@ def post_view(request, post_id):
         'post': post,
         'user_hirer': user_hirer,
         'company_address': companyAddress,
+        'social_media': socialMedia,
 
         'aboutData': aboutData,
         'purposeDatas': purposeDatas,
@@ -215,9 +215,10 @@ def post_view(request, post_id):
 
 @login_required(login_url='../account/login')
 def my_post(request):
-    posts = HirerPost.objects.filter(hire_id=request.user.id).all()
+    posts = HirerPost.objects.filter(hirer_id=request.user.id).all()
     if posts.exists() == False:
         posts = False
+    
     context = {
         'posts': posts,
     }

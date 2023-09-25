@@ -23,7 +23,7 @@
                         <h5>{{post.hire.company_name}}</h5>
                     </div>
                     <div class="box-img">
-                        <img src="{{ post.hire.profile_image.url }}" alt="Compnay Image">
+                        <img src="{{ post.hirer.profile_image.url }}" alt="Compnay Image">
                     </div>
                 </div>
                 <div class="box-list">
@@ -90,22 +90,35 @@
                     <span>Education: </span>
                     <p>{{post.education}}</p>
                 </div>
-                <hr>
-                <div class="social-media">
-                    <a href="" id="facebook"><i class="fa-brands fa-square-facebook"></i></a>
-                    <a href="" id="linkedin"><i class="fa-brands fa-linkedin"></i></a>
-                    <a href="" id="twitter"><i class="fa-brands fa-twitter"></i></a>
-                </div>
+
+                {% if social_media %}
+                    <hr>
+                    <div class="social-media">
+                        {% if social_media.facebook_url %}
+                        <a href="{{social_media.facebook_url}}" id="facebook" target="_blank"><i class="fa-brands fa-square-facebook"></i></a>
+                        {% endif %}
+                        {% if social_media.linkedin_url %}
+                        <a href="{{social_media.linkedin_url}}" id="linkedin" target="_blank"><i class="fa-brands fa-linkedin" target="_blank"></i></a>
+                        {% endif %}
+                        {% if social_media.twitter_url %}
+                        <a href="{{social_media.twitter_url}}" id="twitter" target="_blank"><i class="fa-brands fa-twitter" target="_blank"></i></a>
+                        {% endif %}
+                    </div>
+                {% endif %}
             </div>
             <div class="box-four">
+                {% if aboutData is None %}
                 <div class="about-company">
                     <h3>About Company</h3>
                     <p>{{aboutData|safe}}</p>
                 </div>
+                {% endif %}
+                {% if company_address %}
                 <div class="company-address">
                     <h3>Company Address</h3>
                     <p>{{company_address.street_address}}, {{company_address.city}}, {{company_address.state}}, {{company_address.postal_code}}, {{company_address.country}}</p>
-                </div>
+                </div>                  
+                {% endif %}
             </div>
         </div>
         <div class="container-content-two">

@@ -1,7 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-
+from .lists import EXPERIENCE_CHOICES, LOCATION_CHOICES, ROLE_CHOICES, DEPARTMENT_CHOICES, EMPLOYEE_CHOICES
 from uuid import uuid4
+
 
 class User(AbstractUser):
     is_jobseeker = models.BooleanField(default=False)
@@ -10,41 +11,81 @@ class User(AbstractUser):
     email = models.EmailField(null=False)
     phone_number = models.CharField(max_length=20, null=False)
 
+    def calculate_user_completeness(self):
+        required_fields = ['name', 'email', 'phone_number',]
+
+        completed_fields = 0
+
+        # checked
+        if self.name and self.email and self.phone_number:
+            completed_fields = 3
+
+        total_fields = len(required_fields)
+
+        return (completed_fields / total_fields) * 100
+
 
 class JobSeeker(models.Model):
-    id = models.UUIDField(default=uuid4, editable=False)    
-    user = models.OneToOneField(User, on_delete = models.CASCADE, primary_key = True)
+    id = models.UUIDField(default=uuid4, editable=False)
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, primary_key=True)
     date_of_birth = models.DateField(blank=True, null=True)
     # About me
     about = models.TextField(blank=True, null=True)
     # skills
     skills = models.TextField(blank=True, null=True, default='None')
     # resume
-    file = models.FileField(upload_to='resumes/', blank=True, null=True)
+    resume = models.FileField(upload_to='resumes/', blank=True, null=True)
     # profile image
     profile_image = models.ImageField(upload_to='profile_images/', default='profile_images/defaultProfileImage.png', blank=True, null=True)
+
+    def calculate_jobseeker_completeness(self):
+        required_fields = ['about', 'date_of_birth',
+                           'skills', 'profile_image', 'resume']
+
+        completed_fields = 0
+
+        # checked
+        if self.resume:
+            completed_fields += 1
+
+        # checked
+        if not self.profile_image.name == 'profile_images/defaultProfileImage.png':
+            completed_fields += 1
+
+        # checked
+        if not self.skills == 'None':
+            completed_fields += 1
+        if not self.skills:
+            completed_fields -= 1
+
+        # checked
+        if not self.date_of_birth == None:
+            completed_fields += 1
+
+        # checked
+        if not self.about == 'None':
+            completed_fields += 1
+        if not self.about:
+            completed_fields -= 1
+
+        total_fields = len(required_fields)
+
+        return (completed_fields / total_fields) * 100
+
+    def __str__(self):
+        return self.user.username
+
+
+class JobSeekerSocialMedia(models.Model):
+    jobSeeker = models.ForeignKey(JobSeeker, on_delete=models.CASCADE)
 
     facebook_url = models.URLField(blank=True, null=True)
     linkedin_url = models.URLField(blank=True, null=True)
     twitter_url = models.URLField(blank=True, null=True)
 
-    
-    def calculate_jobseeker_completeness(self):
-        # Define the fields that are required for a complete profile
-        required_fields = ['date_of_birth', 'about', 'skills', 'file', 'profile_image', 'facebook_url', 'linkedin_url', 'twitter_url']
-        
-        # Calculate the percentage of completed fields
-        completed_fields = sum(1 for field in required_fields if getattr(self, field))
-        total_fields = len(required_fields)
-        
-        # Calculate the percentage
-        return (completed_fields / total_fields) * 100
-
-    
-    
     def __str__(self):
-        return self.user.username
-
+        return self.jobSeeker.user.username
 
 
 class JobSeekerAddress(models.Model):
@@ -58,18 +99,27 @@ class JobSeekerAddress(models.Model):
 
     def calculate_jobseekeraddress_completeness(self):
         # Define the fields that are required for a complete profile
-        required_fields = ['street_address', 'city', 'state', 'postal_code', 'country']
-        
+        required_fields = ['street_address', 'city',
+                           'state', 'postal_code', 'country']
+
         # Calculate the percentage of completed fields
-        completed_fields = sum(1 for field in required_fields if getattr(self, field))
+        completed_fields = sum(
+            1 for field in required_fields if self.field_is_complete(getattr(self, field)))
         total_fields = len(required_fields)
-        
+
         # Calculate the percentage
         return (completed_fields / total_fields) * 100
 
+    def field_is_complete(self, field_value):
+        if field_value is None:
+            return False
+        if isinstance(field_value, str) and not field_value.strip():
+            return False
+        return True
 
     def __str__(self):
         return self.jobSeeker.user.username
+
 
 class JobSeekerEducation(models.Model):
     jobSeeker = models.ForeignKey(JobSeeker, on_delete=models.CASCADE)
@@ -82,17 +132,27 @@ class JobSeekerEducation(models.Model):
 
     def calculate_jobseekereducation_completeness(self):
         # Define the fields that are required for a complete profile
-        required_fields = ['school_name', 'degree', 'field_of_study', 'start_date', 'end_date']
-        
+        required_fields = ['school_name', 'degree',
+                           'field_of_study', 'start_date', 'end_date']
+
         # Calculate the percentage of completed fields
-        completed_fields = sum(1 for field in required_fields if getattr(self, field))
+        completed_fields = sum(
+            1 for field in required_fields if self.field_is_complete(getattr(self, field)))
         total_fields = len(required_fields)
-        
+
         # Calculate the percentage
         return (completed_fields / total_fields) * 100
 
+    def field_is_complete(self, field_value):
+        if field_value is None:
+            return False
+        if isinstance(field_value, str) and not field_value.strip():
+            return False
+        return True
+
     def __str__(self):
         return self.jobSeeker.user.username
+
 
 class JobSeekerWorkExperience(models.Model):
     jobSeeker = models.ForeignKey(JobSeeker, on_delete=models.CASCADE)
@@ -105,25 +165,33 @@ class JobSeekerWorkExperience(models.Model):
 
     def calculate_jobseekerworkexperience_completeness(self):
         # Define the fields that are required for a complete profile
-        required_fields = ['company_name', 'position', 'start_date', 'end_date', 'description']
-        
+        required_fields = ['company_name', 'position',
+                           'start_date', 'end_date', 'description']
+
         # Calculate the percentage of completed fields
-        completed_fields = sum(1 for field in required_fields if getattr(self, field))
+        completed_fields = sum(
+            1 for field in required_fields if self.field_is_complete(getattr(self, field)))
         total_fields = len(required_fields)
-        
+
         # Calculate the percentage
         return (completed_fields / total_fields) * 100
+
+    def field_is_complete(self, field_value):
+        if field_value is None:
+            return False
+        if isinstance(field_value, str) and not field_value.strip():
+            return False
+        return True
 
     def __str__(self):
         return self.jobSeeker.user.username
 
 
-
-
 class Hirer(models.Model):
     id = models.UUIDField(default=uuid4, editable=False)
 
-    user = models.OneToOneField(User, on_delete = models.CASCADE, primary_key = True)
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, primary_key=True)
 
     profile_image = models.ImageField(upload_to='profile_images/', default='profile_images/defaultProfileImage.png', blank=True, null=True)
 
@@ -131,21 +199,24 @@ class Hirer(models.Model):
 
     about_company = models.TextField(null=True, blank=True)
 
-    facebook_url = models.URLField(blank=True, null=True)
-    linkedin_url = models.URLField(blank=True, null=True)
-    twitter_url = models.URLField(blank=True, null=True)
-
     def calculate_hirer_completeness(self):
-        # Define the fields that are required for a complete profile
-        required_fields = ['profile_image', 'company_name', 'about_company', 'facebook_url', 'linkedin_url', 'twitter_url']
-        
-        # Calculate the percentage of completed fields
-        completed_fields = sum(1 for field in required_fields if getattr(self, field))
+        required_fields = ['profile_image', 'company_name', 'about_company']
+
         total_fields = len(required_fields)
-        
-        # Calculate the percentage
+
+        completed_fields = 0
+
+        if not self.company_name == 'None' or self.company_name:
+            completed_fields += 1
+
+        if not self.about_company == 'None' or self.about_company:
+            completed_fields += 1
+
+        if not self.profile_image.name == 'profile_images/defaultProfileImage.png':
+            completed_fields += 1
+
         return (completed_fields / total_fields) * 100
-    
+
     def __str__(self):
         return self.user.username
 
@@ -161,45 +232,62 @@ class HirerAddress(models.Model):
 
     def calculate_hireraddress_completeness(self):
         # Define the fields that are required for a complete profile
-        required_fields = ['street_address', 'city', 'state', 'postal_code', 'country']
-        
+        required_fields = ['street_address', 'city',
+                           'state', 'postal_code', 'country']
+
         # Calculate the percentage of completed fields
-        completed_fields = sum(1 for field in required_fields if getattr(self, field))
+        completed_fields = sum(
+            1 for field in required_fields if self.field_is_complete(getattr(self, field)))
         total_fields = len(required_fields)
-        
+
         # Calculate the percentage
         return (completed_fields / total_fields) * 100
+
+    def field_is_complete(self, field_value):
+        if field_value is None:
+            return False
+        if isinstance(field_value, str) and not field_value.strip():
+            return False
+        return True
 
     def __str__(self):
         return self.hirer.user.username
 
 
-    
+class HirerSocialMedia(models.Model):
+    hirer = models.ForeignKey(Hirer, on_delete=models.CASCADE)
+
+    facebook_url = models.URLField(blank=True, null=True)
+    linkedin_url = models.URLField(blank=True, null=True)
+    twitter_url = models.URLField(blank=True, null=True)
+
+    def __str__(self):
+        return self.hirer.user.username
+
 
 class HirerPost(models.Model):
-    hire = models.ForeignKey(Hirer, on_delete=models.CASCADE)
+    hirer = models.ForeignKey(Hirer, on_delete=models.CASCADE)
 
     title = models.CharField(max_length=200)
-    experience = models.CharField(max_length=100, null=True, blank=True, default='None')
-    salary = models.DecimalField(max_digits=15, decimal_places=0,null=True, blank=True, default='Not Disclosed')
-    intake = models.DecimalField(max_digits=15, decimal_places=0,null=True, blank=True, default='Not Disclosed')
-    location = models.CharField(max_length=100)
-    role = models.CharField(max_length=100)
+    experience = models.CharField(choices=[(choice, choice) for choice in EXPERIENCE_CHOICES], max_length=100)
+    salary = models.DecimalField(max_digits=15, decimal_places=0, default='Not Disclosed')
+    intake = models.DecimalField(max_digits=15, decimal_places=0, default='Not Disclosed')
+    location = models.CharField(choices=[(choice, choice) for choice in LOCATION_CHOICES], max_length=100)
+    role = models.CharField(choices=[(choice, choice) for choice in ROLE_CHOICES], max_length=100)
     industry_type = models.CharField(max_length=100)
-    department = models.CharField(max_length=100)
-    employee_type = models.CharField(max_length=100)
+    department = models.CharField(choices=[(choice, choice) for choice in DEPARTMENT_CHOICES], max_length=100)
+    employee_type = models.CharField(choices=[(choice, choice) for choice in EMPLOYEE_CHOICES], max_length=100)
+    education = models.TextField()
     job_highlights = models.TextField()
     job_purpose = models.TextField()
-    education = models.TextField()
     skills_requirement = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.title
-    
+
 
 class JobApplication(models.Model):
     applicant = models.ForeignKey(JobSeeker, on_delete=models.CASCADE)
     job_post = models.ForeignKey(HirerPost, on_delete=models.CASCADE)
     resume = models.FileField(upload_to='resumes/')
-    

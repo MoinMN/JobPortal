@@ -32,6 +32,17 @@
             {% if user_hirer_address %}
             <p id="locationDisplay"><i class="fa-solid fa-location-dot"></i> {{ user_hirer_address.country }}</p>
             {% endif %}
+            <div class="social-media">
+                {% if user_hirer_social_media.facebook_url %}
+                <a href="{{user_hirer_social_media.facebook_url}}" target="_blank" id="facebook"><i class="fa-brands fa-square-facebook"></i></a>
+                {% endif %}
+                {% if user_hirer_social_media.linkedin_url %}
+                <a href="{{user_hirer_social_media.linkedin_url}}" target="_blank" id="linkedin"><i class="fa-brands fa-linkedin"></i></a>
+                {% endif %}
+                {% if user_hirer_social_media.twitter_url %}
+                <a href="{{user_hirer_social_media.twitter_url}}" target="_blank" id="twitter"><i class="fa-brands fa-twitter"></i></a>
+                {% endif %}
+            </div>
         </div>
         <div class="profile-info">
             <div class="menuRadio">
@@ -41,6 +52,8 @@
                 <label for="companyMoreDetails">Company Details</label>
                 <input type="radio" name="menu" id="companyAddress">
                 <label for="companyAddress">Address</label>
+                <input type="radio" name="menu" id="companySocial">
+                <label for="companySocial">Social Media</label>
             </div>
             <div id="hirerCompanyData">
                 <form method="POST">
@@ -89,7 +102,8 @@
                             <th><label for="id_hirer_about">About Company</label></th>
                             <td>
                                 <textarea class="companyForm nobg" type="text" name="about_company" id="id_hirer_about"
-                                    value="{{ user_hirer.about_company }}" cols="30" rows="10" disabled>{{ user_hirer.about_company }}</textarea>
+                                    value="{{ user_hirer.about_company }}" cols="30" rows="10"
+                                    disabled>{{ user_hirer.about_company }}</textarea>
                             </td>
                         </tr>
                     </table>
@@ -132,12 +146,37 @@
                 </form>
                 <button class="edit"><i class="fa-solid fa-pen"></i>Edit</button>
             </div>
+            <div id="hirerSocialData">
+                <form method="POST">
+                    {% csrf_token %}
+                    <table>
+                        <tr>
+                            <th><label for="id_facebook">Facebook URL</label></th>
+                            <td><input class="socialForm nobg" type="url" name="facebook" id="id_facebook"
+                                    value="{{ user_hirer_social_media.facebook_url }}" disabled></td>
+                        </tr>
+                        <tr>
+                            <th><label for="id_linkedin">LinkedIn URL</label></th>
+                            <td><input class="socialForm nobg" type="url" name="linkedin" id="id_linkedin"
+                                    value="{{ user_hirer_social_media.linkedin_url }}" disabled></td>
+                        </tr>
+                        <tr>
+                            <th><label for="id_twitter">Twitter URL</label></th>
+                            <td><input class="socialForm nobg" type="url" name="twitter" id="id_twitter"
+                                    value="{{ user_hirer_social_media.twitter_url }}" disabled></td>
+                        </tr>
+                    </table>
+                    <button type="submit" class="submit" name="form4_submit" value="Submit Form 4" hidden>Save</button>
+                </form>
+                <button class="edit"><i class="fa-solid fa-pen"></i>Edit</button>
+            </div>
         </div>
 
         {% else %}
         <p>No profile data available.</p>
         {% endif %}
     </div>
+
 
 
     {% load static %}
