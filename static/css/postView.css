@@ -129,7 +129,7 @@ hr {
     gap: 1em;
 }
 
-.box-end .box-btn a button {
+.box-end .box-btn button {
     padding: 6px 28px;
     border-radius: 24px;
     /* border: none; */
@@ -137,22 +137,30 @@ hr {
     cursor: pointer;
 }
 
-.box-end .box-btn .save {
+.box-end .box-btn .save,
+.unsave {
     color: rgb(0, 85, 255);
     background-color: transparent;
     transition: background-color 0.5s ease;
 }
 
-.box-end .box-btn .save:hover {
+.box-end .box-btn .save:hover,
+.unsave {
     background-color: #F8F9FA;
 }
 
-.box-end .box-btn .apply {
+.box-end .box-btn .apply,
+.applied {
     padding: 8px 28px;
     color: white;
     background-color: rgb(0, 85, 255);
     border: none;
     transition: background-color 0.5s ease;
+}
+
+.box-end .box-btn .applied {
+    cursor: not-allowed;
+    background: #7a8eff;
 }
 
 .box-end .box-btn .apply:hover {
@@ -335,11 +343,11 @@ hr {
 }
 
 .box-five h3 {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     margin-top: 20px;
 }
 
-.box-five p {
+.box-five button {
     font-size: 1rem;
     line-height: 1.2rem;
     margin-top: 6px;
@@ -353,24 +361,238 @@ hr {
 .job-purpose ul li {
     margin: 8px 0;
 }
-.edit{
+
+.edit {
     background-color: rgb(0, 85, 255);
     border: 1px solid black;
     transition: background-color 500ms ease-in-out;
     color: white;
 }
-.edit:hover{
+
+.edit:hover {
     background-color: rgb(57, 126, 255);
 }
-.delete{
+
+.delete {
     color: white;
     border: 1px solid black;
     background-color: red;
     transition: background-color 500ms ease-in-out;
 }
-.delete:hover{
+
+.delete:hover {
     background-color: rgb(255, 75, 47);
 }
-.save{
+
+.save,
+.unsave {
     border: 2px solid rgb(0, 85, 255);
+}
+
+#response-container {
+    display: none;
+}
+
+.response-container {
+    background-color: rgba(209, 224, 255, 0.967);
+    width: 850px;
+    height: 450px;
+    /* padding: 10px; */
+    top: 50%;
+    left: 50%;
+    margin-top: -225px;
+    /* Negative half of height. */
+    margin-left: -425px;
+    /* Negative half of width. */
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    font-size: 1.1rem;
+    border-radius: 12px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.response-container .response-heading {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    font-size: 1.5rem;
+}
+
+.response-container .response-heading h3 {
+    padding: 4px 6px;
+}
+
+.response-container .response-heading .cross i {
+    padding: 8px;
+    border-top-right-radius: 12px;
+}
+
+.response-container .response-heading .cross i:hover {
+    cursor: pointer;
+    background-color: red;
+}
+
+.response-container .response-content {
+    display: flex;
+    flex-direction: column;
+    padding: 6px 8px;
+    width: 100%;
+}
+
+.response-container .response-content table {
+    width: 100%;
+    border: 1px solid white;
+    border-radius: 12px;
+    /* border-collapse: collapse; */
+    border-spacing: 0;
+}
+
+table tr th {
+    /* border-radius: 12px; */
+    font-size: 1.2rem;
+    padding: 6px 0;
+    background-color: #ffffff;
+}
+
+table tr th:first-child {
+    border-top-left-radius: 12px;
+}
+
+table tr th:last-child {
+    border-top-right-radius: 12px;
+}
+
+table td,
+table th {
+    border-bottom: 1px solid white;
+}
+
+table tr:nth-child(odd) {
+    background-color: #ffeded;
+}
+
+table tr:nth-child(even) {
+    background-color: #fff9e7;
+}
+
+table tr td {
+    padding: 6px 0;
+    text-align: center;
+}
+
+table tr:last-child>td {
+    border-bottom: none;
+}
+
+table tr:last-child>td:first-child {
+    border-bottom-left-radius: 12px;
+}
+
+table tr:last-child>td:last-child {
+    border-bottom-right-radius: 12px;
+}
+
+#print {
+    margin: 12px auto;
+    width: 120px;
+    font-size: 1.2rem;
+    background-color: #ffffff;
+    border: 1px solid black;
+    padding: 4px 12px;
+    cursor: pointer;
+    border-radius: 12px;
+    transition: background-color 500ms ease;
+}
+
+#print:hover {
+    background-color: #ffeded;
+}
+
+.box-five button {
+    background-color: rgb(200, 255, 117);
+    padding: 6px 12px;
+    margin: 20px 0;
+    cursor: pointer;
+    border-radius: 8px;
+    font-size: 1rem;
+}
+
+table tr td a {
+    text-decoration: none;
+    color: black;
+}
+
+.background-blur {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(5px);
+    z-index: 1;
+    display: none;
+}
+
+table tr td select {
+    background-color: transparent;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.btn {
+    display: flex;
+}
+
+#print,
+#dummeSubmit {
+    margin: 12px auto;
+    width: 120px;
+    font-size: 1.1rem;
+    background-color: #ffffff;
+    border: 1px solid black;
+    padding: 4px 12px;
+    cursor: pointer;
+    border-radius: 12px;
+    transition: background-color 500ms ease;
+}
+
+#print:hover {
+    background-color: #ffeded;
+}
+
+#dummeSubmit:hover {
+    background-color: #fff9e7;
+}
+
+#dummeSubmit {
+    width: 240px;
+}
+
+#response-container {
+    z-index: 3;
+}
+
+.box-six {
+    display: flex;
+    flex-direction: column;
+    border-radius: 12px;
+    border: 1px solid rgba(190, 190, 190, 0.696);
+    background-color: #FFFFFF;
+    padding: 12px 20px;
+    transition: box-shadow 0.5s ease;
+    width: 500px;
+}
+
+.box-six:hover {
+    box-shadow: 0px 0px 20px 2px rgba(213, 213, 213, 0.685);
+}
+
+.box-six h3 {
+    font-size: 1.2rem;
+    margin: 20px 0;
 }

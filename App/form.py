@@ -1,7 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from django.db import transaction
-from .models import User, JobSeeker, Hirer, HirerPost
+from .models import User, JobSeeker, Hirer, HirerPost, JobApplication
 
 class JobSeekerSignUpForm(UserCreationForm):
     name = forms.CharField(required=True)
@@ -62,7 +62,7 @@ class PostForm(forms.ModelForm):
         fields = ['title', 'experience', 'location', 'salary', 'intake', 'role', 'industry_type', 'department', 'employee_type', 'job_highlights', 'job_purpose', 'education', 'skills_requirement']
 
 
-# class TechnicalForm(forms.ModelForm):
-#     class Meta:
-#         model = JobSeeker
-#         fields = ['file']
+class ResponseChoice(forms.ModelForm):
+    class Meta:
+        model = JobApplication
+        fields = ['response']

@@ -29,7 +29,13 @@ urlpatterns = [
     path('delete-post/<int:post_id>', views.delete_post, name='delete-post'),
     path('view-post/<int:post_id>', views.post_view, name='view-post'),
 
+    path('view-saved-post', views.view_saved_post, name='view-saved-post'),
+    path('applied-job', views.applied_job, name='applied-job'),
+    path('apply/<int:post_id>', views.apply_job, name='apply-job'),
+
     path('find-job', views.find_job, name='find-job'),
+
+    path('save_unsave_post/<int:post_id>', views.save_unsave_post, name='save_unsave_post'),
 
     path('profile/<str:username>', views.view_profile, name='view_profile'),
 ]

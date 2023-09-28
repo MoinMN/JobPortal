@@ -8,6 +8,7 @@
     <script src="https://kit.fontawesome.com/437000937b.js" crossorigin="anonymous"></script>
     {% load static %}
     <link rel="shortcut icon" href="{% static 'img/favicon-bg.jpg' %}" type="image/x-icon">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         * {
             padding: 0;
@@ -24,7 +25,9 @@
             margin: 45px auto;
             padding: 18px 0;
             display: flex;
-            gap: 2em;
+            justify-content: center;
+            align-items: center;
+            gap: 1em;
             border-radius: 12px;
             background-color: #FFFFFF;
             transition: box-shadow 0.5s ease;
@@ -40,6 +43,15 @@
             margin: 6px 0;
         } */
 
+        .hero-box{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1em;
+        }
+        .hero-box a{
+            text-decoration: none;
+        }
         .box {
             display: flex;
             flex-direction: column;
@@ -62,11 +74,13 @@
         }
 
         .box-title h3 {
+            color: black;
             font-size: 1.3rem;
             line-height: 1.1em;
         }
-
+        
         .box-title h5 {
+            color: black;
             font-size: 1.1rem;
         }
 
@@ -123,15 +137,23 @@
             display: flex;
             gap: 1em;
         }
-
-        .box-end .box-btn .hide,
-        .save {
-            cursor: pointer;
+        .box-end .box-btn a{
+            text-decoration: none;
+            color: #717B9E;
         }
 
+        .box-end .box-btn .hide,
+        .save,
+        .unsave {
+            transition: color 500ms ease;
+            cursor: pointer;
+        }
         .box-end .box-btn .hide:hover,
         .save:hover {
             color: rgb(0, 85, 255);
+        }
+        .unsave:hover{
+            color: orange;
         }
     </style>
 </head>
@@ -140,7 +162,7 @@
     {% include "nav.html"%}
 
     <div class="container">
-        <div class="filter">
+        <!-- <div class="filter">
             <h3>All Filters</h3>
             <hr>
             <div class="work-mode">
@@ -289,46 +311,98 @@
             </div>
 
 
-        </div>
+        </div> -->
 
         <div class="hero-box">
-            <div class="box">
+            {% for post in posts %}
+            <a href="{% url 'view-post' post.id %}">
+                <div class="box">
                 <div class="box-head">
                     <div class="box-title">
-                        <h3>Data Changes Specialist (Onboarding Specialist)</h3>
-                        <h5>Novel Financial Solutions</h5>
+                        <h3>{{post.title}}</h3>
+                        <h5>{{post.hirer.company_name}}</h5>
                     </div>
                     <div class="box-img">
-                        <img src="{% static 'img/img2.jpg' %}" alt="Compnay Image">
+                        <img src="{{post.hirer.profile_image.url}}" alt="Compnay Image">
                     </div>
                 </div>
                 <div class="box-list">
                     <div class="box-list-top">
-                        <span><i class="fa-solid fa-briefcase"></i> 5 - 10 Years</span>
-                        <span class="rupee"><i class="fa-solid fa-indian-rupee-sign"></i> 10,00,000</span>
-                        <span><i class="fa-solid fa-location-dot"></i> Chiplun</span>
+                        <span><i class="fa-solid fa-briefcase"></i> {{post.experience}}</span>
+                        <span class="rupee"><i class="fa-solid fa-indian-rupee-sign"></i> {{post.salary}}</span>
+                        <span><i class="fa-solid fa-location-dot"></i> {{post.location}}</span>
                     </div>
                     <div class="box-list-bottom">
-                        <span><i class="fa-solid fa-newspaper"></i> Execution of Data changes like Location, Manager,
-                            cost center Managing bulk up...</span>
+                        <span><i class="fa-solid fa-newspaper"></i> {{post.role}}</span>
                     </div>
                 </div>
                 <div class="box-content">
-                    <span>Data Management • Onboarding • Compliance</span>
+                    <span class="skills">{{post.skills_requirement}}</span>
                 </div>
+            </a>
                 <div class="box-end">
-                    <span>1 Day Ago</span>
+                    <span>{{post.created_at|timesince }} ago</span>
                     <div class="box-btn">
-                        <span class="hide"><i class="fa-solid fa-eye-slash"></i> Hide</span>
-                        <span class="save"><i class="fa-regular fa-bookmark"></i> Save</span>
+                        {% comment %}                          
+                            {% if post in user_job_seeker.saved_posts.all %}                          
+                            <a href="{% url 'unsave-post' post.id %}"><span class="unsave"><i class="fa-solid fa-bookmark"></i> Unsave</span></a>
+                            {% else %}
+                            <a href="{% url 'save-post' post.id %}"><span class="save"><i class="fa-regular fa-bookmark"></i> Save</span></a>
+                            {% endif %}
+                        {% endcomment %}
+                        {% if post in user_job_seeker.saved_posts.all %}
+                            <span data-post-id="{{post.id}}" class="unsave save-unsave-button"><i class="fa-solid fa-bookmark"></i> Unsave</span>
+                        {% else %}
+                            <span data-post-id="{{post.id}}" class="save save-unsave-button"><i class="fa-regular fa-bookmark"></i> Save</span>
+                        {% endif %}
                     </div>
                 </div>
-            </div>
+                </div>
+            {% endfor %}
         </div>
 
     </div>
 
+    <script>
+        let classSkills = document.querySelectorAll('.skills');
 
+        for (let i = 0; i < classSkills.length; i++) {
+            let result = '';
+            let skills = classSkills[i].innerHTML;
+
+            skill = skills.split(',');
+
+            for (let j = 0; j < skill.length; j++) {
+                result = result + skill[j] + " • ";
+            }
+            classSkills[i].innerHTML = result.slice(0, -2);
+        }
+
+        $(document).ready(function() {
+            $('.save-unsave-button').click(function() {
+                var postId = $(this).data('post-id');
+                var button = $(this);
+                
+                $.ajax({
+                    url: '/save_unsave_post/' + postId,
+                    method: 'GET',
+                    success: function(data) {
+                        if (data.saved) {
+                            button.removeClass('save').addClass('unsave');
+                            button.html('<i class="fa-solid fa-bookmark"></i> Unsave');
+                        } else {
+                                button.removeClass('unsave').addClass('save');
+                                button.html('<i class="fa-regular fa-bookmark"></i> Save');
+                            }
+                        },
+                    error: function(error) {
+                        console.error('Ajax request failed:', error);
+                    }
+                });
+            });
+        });
+
+    </script>
 </body>
 
 </html>

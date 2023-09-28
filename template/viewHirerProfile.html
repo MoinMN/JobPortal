@@ -12,24 +12,7 @@
 </head>
 
 <body>
-    <nav>
-        <div class="left">
-            <h1>JobPortal</h1>
-        </div>
-        <div class="center">
-            <ul>
-                <li><a href="{% url 'home' %}">Home</a></li>
-                <li><a href="#">Find a Job</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Contact</a></li>
-            </ul>
-        </div>
-        <div class="right">
-            <span><a href="{% url 'profile' %}" id="profile"><i class="fa-solid fa-user"></i> Profile</a>
-                <span><a href="{% url 'logout' %}" id="logout"><i class="fa-solid fa-right-from-bracket"></i>
-                        Logout</a></span>
-        </div>
-    </nav>
+    {% include "nav.html" %}
 
     <div class="container">
         {% if user_hirer %}

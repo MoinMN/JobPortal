@@ -12,24 +12,8 @@
 </head>
 
 <body>
-    <nav>
-        <div class="left">
-            <h1>JobPortal</h1>
-        </div>
-        <div class="center">
-            <ul>
-                <li><a href="{% url 'home' %}">Home</a></li>
-                <li><a href="#">Find a Job</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Contact</a></li>
-            </ul>
-        </div>
-        <div class="right">
-            <span><a href="{% url 'profile' %}" id="profile"><i class="fa-solid fa-user"></i> Profile</a>
-                <span><a href="{% url 'logout' %}" id="logout"><i class="fa-solid fa-right-from-bracket"></i>
-                        Logout</a></span>
-        </div>
-    </nav>
+    {% include "nav.html" %}
+
     <div class="container">
         {% if user_job_seeker %}
         <div class="profile-card">
@@ -117,8 +101,8 @@
                     </tr>
                     <tr>
                         <th><label for="id_resume">Resume</label></th>
-                        {% if user_job_seeker.file %}
-                        <td id="resumeStatus"><a href="{{user_job_seeker.file.url}}" target="_blank">View</a></td>
+                        {% if user_job_seeker.resume %}
+                        <td id="resumeStatus"><a href="{{user_job_seeker.resume.url}}" target="_blank">View</a></td>
                         {% else %}
                         <td id="resumeStatus">Resume Not Uploaded!</td>
                         {% endif %}
@@ -278,61 +262,8 @@
         {% endif %}
     </div>
 
-    <script> 
-        let radio = document.getElementsByName('menu');
-        for (let i = 0; i < radio.length; i++) {
-            radio[i].addEventListener("click", () => {
-                if (radio[i].id == 'basic') {
-                    document.getElementById("basicData").style.display = 'block';
-                    document.getElementById("technicalData").style.display = 'none';
-                    document.getElementById("addressData").style.display = 'none';
-                    document.getElementById("educationData").style.display = 'none';
-                    document.getElementById("experienceData").style.display = 'none';
-                }
-                else if (radio[i].id == 'technical') {
-                    document.getElementById("basicData").style.display = 'none';
-                    document.getElementById("technicalData").style.display = 'block';
-                    document.getElementById("addressData").style.display = 'none';
-                    document.getElementById("educationData").style.display = 'none';
-                    document.getElementById("experienceData").style.display = 'none';
-                }
-                else if (radio[i].id == 'address') {
-                    document.getElementById("basicData").style.display = 'none';
-                    document.getElementById("technicalData").style.display = 'none';
-                    document.getElementById("addressData").style.display = 'block';
-                    document.getElementById("educationData").style.display = 'none';
-                    document.getElementById("experienceData").style.display = 'none';
-                }
-                else if (radio[i].id == 'education') {
-                    document.getElementById("basicData").style.display = 'none';
-                    document.getElementById("technicalData").style.display = 'none';
-                    document.getElementById("addressData").style.display = 'none';
-                    document.getElementById("educationData").style.display = 'block';
-                    document.getElementById("experienceData").style.display = 'none';
-                }
-                else {
-                    document.getElementById("basicData").style.display = 'none';
-                    document.getElementById("technicalData").style.display = 'none';
-                    document.getElementById("addressData").style.display = 'none';
-                    document.getElementById("educationData").style.display = 'none';
-                    document.getElementById("experienceData").style.display = 'block';
-                }
-            });
-        }
-
-        const profileImage = document.getElementById('profile-img');
-
-
-        profileImage.addEventListener('mouseover', () => {
-            profileImage.style.transform = 'scale(1.1)';
-        });
-
-        profileImage.addEventListener('mouseout', () => {
-            profileImage.style.transform = 'scale(1)';
-        });
-    </script>
-
-
+    {% load static %}
+    <script src="{% static 'js/viewJobSeekerProfile.js' %}"></script>
     <script src="https://kit.fontawesome.com/437000937b.js" crossorigin="anonymous"></script>
 </body>
 

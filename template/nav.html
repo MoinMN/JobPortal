@@ -9,8 +9,8 @@
             <ul>
                 <li><a href="{% url 'home' %}">Home</a></li>
                 <li><a href="{% url 'find-job' %}">Find Jobs</a></li>
-                <li><a href="">Applied Jobs</a></li>
-                <li><a href="">Saved Jobs</a></li>
+                <li><a href="{% url 'applied-job' %}">Applied Jobs</a></li>
+                <li><a href="{% url 'view-saved-post' %}">Saved Jobs</a></li>
             </ul>
         {% else %}
             <ul>

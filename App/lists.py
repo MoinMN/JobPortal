@@ -1910,3 +1910,19 @@ EMPLOYEE_CHOICES = [
     "Seasonal",
 ]
 
+
+APPLICATION_RESPONSE_CHOICES = [
+    "None",
+    "Interested",
+    "Rejected",
+    "Shortlisted",
+    "Not Selected",
+    "Interview Invitation",
+    "On-Hold",
+    "Pending Review",
+    "Overqualified",
+    "Underqualified",
+    "Selected for Second Round",
+    "No Longer Hiring",
+    "Considered for Future Opportunities",
+]
