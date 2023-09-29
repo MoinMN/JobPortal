@@ -3,9 +3,16 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.http import HttpResponseForbidden, JsonResponse
 from App.models import Hirer, JobSeeker, JobSeekerAddress, JobSeekerEducation, JobSeekerWorkExperience, HirerPost, HirerAddress, User, HirerSocialMedia, JobSeekerSocialMedia, JobApplication
 from .models import ContactUs
-from App.models import HirerPost
 from django.contrib.auth.decorators import login_required
 from App.form import PostForm, ResponseChoice
+from django.db.models import Count, Case, When, IntegerField
+from django.db.models import Q
+from datetime import timedelta
+from django.utils import timezone
+from App.lists import LOCATION_CHOICES
+from .recommendation import SkillsBasedRecommendation
+
+
 
 from urllib.parse import urlparse
 import nltk
@@ -80,7 +87,14 @@ def home(request):
         user = User.objects.get(id=request.user.id)
         user_job_seeker = JobSeeker.objects.get(user=request.user)
         user_job_seeker_address = JobSeekerAddress.objects.filter(jobSeeker=user_job_seeker).first()
-        job_application = JobApplication.objects.filter(applicant=user_job_seeker)
+        job_applications = JobApplication.objects.filter(applicant=user_job_seeker)
+
+        pending_response, received_response = 0, 0
+        for job_application in job_applications:
+            if job_application.response == 'None':
+                pending_response += 1
+            else:
+                received_response += 1
 
         user_job_seeker_first_education = JobSeekerEducation.objects.filter(jobSeeker=user_job_seeker).first()
         user_job_seeker_first_experience = JobSeekerWorkExperience.objects.filter(jobSeeker=user_job_seeker).first()
@@ -99,29 +113,42 @@ def home(request):
 
         percentage_user = (user_completeness_percentage + completeness_percentage_user_job_seeker + completeness_percentage_user_job_seeker_address +
                            completeness_percentage_user_job_seeker_first_education ) / 4
-
+        
         context = {
-            'job_application': job_application,
+            'job_applications': job_applications,
 
             'user_job_seeker': user_job_seeker,
             'user_job_seeker_address': user_job_seeker_address,
             'user_job_seeker_first_education': user_job_seeker_first_education,
 
             'percentage_user': percentage_user,
+
+
+            'received_response': received_response,
+            'pending_response': pending_response,
         }
 
         return render(request, 'home.html', context)
 
-    else:
+    if request.user.is_hirer:
         user = User.objects.get(id=request.user.id)
         user_hirer = Hirer.objects.get(user=request.user)
         user_hirer_address = HirerAddress.objects.filter(hirer=user_hirer).first()
         user_hirer_posts = HirerPost.objects.filter(hirer_id=request.user.id).all()
 
-        num_applications = 0
+        num_applications, pending_response = 0, 0
         for item in user_hirer_posts:
-            job_application = JobApplication.objects.filter(job_post=item.id)
-            num_applications += job_application.count()
+            try:
+                job_application = JobApplication.objects.get(job_post=item.id)
+                if job_application:
+                    num_applications += 1
+                
+                    if job_application.response == 'None':
+                        pending_response += 1
+            except JobApplication.DoesNotExist:
+                print('JobApplication DoesNotExist')
+
+
         
         user_completeness_percentage = user.calculate_user_completeness()
         completeness_percentage_user_hirer = user_hirer.calculate_hirer_completeness()
@@ -135,10 +162,14 @@ def home(request):
             'user_hirer': user_hirer,
             'user_hirer_address': user_hirer_address,
 
+            'pending_response': pending_response,
+
             'user_hirer_posts': user_hirer_posts,
             'num_applications': num_applications,
 
             'percentage_user': percentage_user,
+
+            'pending_response': pending_response,
         }
 
         return render(request, 'home.html', context)
@@ -179,8 +210,6 @@ def update_post(request, post_id):
             return redirect('my-post')
     else:
         form = PostForm(instance=post)
-
-    # print(form)
 
     return render(request, 'createPost.html', {'form': form})
 
@@ -246,7 +275,6 @@ def post_view(request, post_id):
     purposeDatas = sent_tokenize(purpose)
 
     highlightDatas = sent_tokenize(highlight)
-
     context = {
         'post': post,
 
@@ -295,45 +323,288 @@ def find_job(request):
     posts = HirerPost.objects.all()
     user_job_seeker = JobSeeker.objects.get(user=request.user)
 
+    employee_types = (
+        posts.values('employee_type')
+        .annotate(count_emp=Count('employee_type'))
+        .order_by('-count_emp')
+    )
+
+    experiences = (
+        posts.values('experience')
+        .annotate(count_exp=Count('experience'))
+        .annotate(
+            experience_order=Case(
+                When(experience='None', then=0),
+                When(experience='0-1 year', then=1),
+                When(experience='1-2 years', then=2),
+                When(experience='2-3 years', then=3),
+                When(experience='3-4 years', then=4),
+                When(experience='4-5 years', then=5),
+                When(experience='5-10 years', then=6),
+                When(experience='10-15 years', then=7),
+                When(experience='15+ years', then=8),
+                default=999,
+                output_field=IntegerField(),
+            )
+        )
+        .order_by('experience_order')
+    )
+    
+    top_departments = (
+        posts.values('department')
+        .annotate(count_dept=Count('department'))
+        .order_by('-count_dept')[:4]
+    )
+    remaining_departments = (
+        posts.exclude(department__in=[dep['department'] for dep in top_departments])
+        .values('department')
+        .annotate(count_dept=Count('department'))
+        .order_by('department')
+    )
+
+
+    top_locations = (
+        posts.values('location')
+        .annotate(count_loc=Count('location'))
+        .order_by('-count_loc')[:4]
+    )
+    remaining_locations = (
+        posts.exclude(location__in=[loc['location'] for loc in top_locations])
+        .values('location')
+        .annotate(count_loc=Count('location'))
+        .order_by('location')
+    )
+
+
+    top_roles = (
+        posts.values('role')
+        .annotate(count_role=Count('role'))
+        .order_by('-count_role')[:4]
+    )
+    remaining_roles = (
+        posts.exclude(role__in=[role['role'] for role in top_roles])
+        .values('role')
+        .annotate(count_role=Count('role'))
+        .order_by('role')
+    )
+
+    # selected_salary_ranges = request.GET.getlist('salary')
+
+    salary_ranges = {
+        'threeL': (0, 300000),
+        'sixL': (300001, 600000),
+        'tenL': (600001, 1000000),
+        'fiviteenL': (1000001, 1500000),
+        'fiviteenPlusL': (1500001, None),
+    }
+    salary_counts = {}
+
+    for label, (min_salary, max_salary) in salary_ranges.items():
+        # if label in selected_salary_ranges:
+        if max_salary is None:
+            count = HirerPost.objects.filter(salary__gte=min_salary).count()
+        else:
+            count = HirerPost.objects.filter(salary__gte=min_salary, salary__lte=max_salary).count()
+        salary_counts[label] = count
+
+
+    if request.method == "GET":
+        is_filter = False
+
+
+        selected_employee_types = request.GET.getlist('employee-type')
+        
+        employee_type_filter = {}
+        filtered_employee_posts = ''
+        if selected_employee_types:
+            is_filter = 'run'
+            employee_type_filter['employee_type__in'] = selected_employee_types
+
+            filtered_employee_posts = HirerPost.objects.filter(**employee_type_filter)
+            if filtered_employee_posts:
+                is_filter = True
+
+        selected_experiences = request.GET.getlist('experience')
+
+        experience_filter = {}
+        filtered_experience_posts = ''
+        if selected_experiences:
+            is_filter = 'run'
+            experience_filter['experience__in'] = selected_experiences
+
+            filtered_experience_posts = HirerPost.objects.filter(**experience_filter)
+            if filtered_experience_posts:
+                is_filter = True
+
+        selected_departments = request.GET.getlist('department')
+
+        department_filter = {}
+        filtered_department_posts = ''
+        if selected_departments:
+            is_filter = 'run'
+            department_filter['department__in'] = selected_departments
+
+            filtered_department_posts = HirerPost.objects.filter(**department_filter)
+            if filtered_department_posts:
+                is_filter = True
+
+        selected_locations = request.GET.getlist('location')
+        # selected_locations = request.GET.getlist('locationInput')
+
+        location_filter = {}
+        filtered_location_posts = ''
+        if selected_locations:
+            is_filter = 'run'
+            location_filter['location__in'] = selected_locations
+
+            filtered_location_posts = HirerPost.objects.filter(**location_filter)
+            if filtered_location_posts:
+                is_filter = True
+
+        selected_salary = request.GET.getlist('salary')
+
+        filtered_salary_posts = ''
+        if selected_salary:
+            is_filter = 'run'
+            selected_salary = [int(salary) for salary in selected_salary]
+
+            salary_conditions = [Q(salary__gte=salary) for salary in selected_salary]
+
+            combined_conditions = Q()
+
+            for condition in salary_conditions:
+                combined_conditions |= condition
+
+            filtered_salary_posts = HirerPost.objects.filter(combined_conditions)
+            if filtered_salary_posts:
+                is_filter = True
+
+        selected_role = request.GET.getlist('role')
+
+        role_filter = {}
+        filtered_role_posts = ''
+        if selected_role:
+            is_filter = 'run'
+            role_filter['role__in'] = selected_role
+
+            filtered_role_posts = HirerPost.objects.filter(**role_filter)
+            if filtered_role_posts:
+                is_filter = True
+
+        freshness = ''
+        filtered_freshiness_posts = ''
+        if 'freshness' in request.GET:
+            is_filter = 'run'
+            freshness = request.GET['freshness']
+            filtered_freshiness_posts = HirerPost.objects.all()
+
+            try:
+                freshness = int(freshness)
+                if freshness > 0:
+                    threshold_date = timezone.now() - timedelta(days=freshness)
+                    filtered_freshiness_posts = filtered_freshiness_posts.filter(created_at__gte=threshold_date)
+            except ValueError:
+                pass
+            if filtered_freshiness_posts:
+                is_filter = True
+
+
+        keywordInput = request.GET.get('keywordInput', '')
+
+        searchResults = ''
+        companyNameSearch = ''
+        if keywordInput:
+            is_filter = 'run'
+            search_fields = ['title', 'salary', 'role', 'industry_type', 'department', 'employee_type', 'education', 'job_highlights', 'job_purpose', 'skills_requirement'] 
+
+            # Create a Q object that combines multiple OR conditions for each field
+            filter_conditions = Q()
+            for field in search_fields:
+                filter_conditions |= Q(**{f'{field}__icontains': keywordInput})
+
+
+            searchResults = HirerPost.objects.filter(filter_conditions)
+
+
+            companyName = Hirer.objects.filter(company_name__icontains=keywordInput)
+            for result in companyName:
+                companyNameSearch = HirerPost.objects.filter(hirer=result)
+            if searchResults or companyNameSearch:
+                is_filter = True
+            # print(companyNameSearch)
+
+        experienceInput = request.GET.get('experienceInput', '')
+
+        searchExperienceResults = ''
+        if experienceInput:
+            is_filter = 'run'
+            searchExperienceResults = HirerPost.objects.filter(experience=experienceInput)
+            if searchExperienceResults:
+                is_filter = True
+
+        locationInput = request.GET.get('locationInput', '')
+        
+        searchLocationResults = ''
+        if locationInput:
+            is_filter = 'run'
+            searchLocationResults = HirerPost.objects.filter(location__icontains=locationInput)
+            if searchLocationResults:
+                is_filter = True
+
+
+
     context = {
         'posts': posts,
         'user_job_seeker': user_job_seeker,
+
+        'employee_types': employee_types,
+        'experiences': experiences,
+        
+        'top_departments': top_departments,
+        'top_locations': top_locations,
+        'top_roles': top_roles,
+
+        'remaining_departments': remaining_departments,
+        'remaining_locations': remaining_locations,
+        'remaining_roles': remaining_roles,
+
+        'salary_counts': salary_counts,
+
+        'is_filter': is_filter,
+
+
+        'keywordInput': keywordInput,
+        'experienceInput': experienceInput,
+        'locationInput': locationInput,
+
+        'searchResults': searchResults,
+        'companyNameSearch': companyNameSearch,
+
+        'searchExperienceResults': searchExperienceResults,
+        'searchLocationResults': searchLocationResults,
+
+        'filtered_employee_posts': filtered_employee_posts,
+        'filtered_experience_posts': filtered_experience_posts,
+        'filtered_department_posts': filtered_department_posts,
+        'filtered_location_posts': filtered_location_posts,
+        'filtered_salary_posts': filtered_salary_posts,
+        'filtered_role_posts': filtered_role_posts,
+        'filtered_freshiness_posts': filtered_freshiness_posts,
+
+        'selected_employee_types': selected_employee_types,
+        'selected_experiences': selected_experiences,
+        'selected_departments': selected_departments,
+        'selected_locations': selected_locations,
+        'selected_salary': selected_salary,
+        'selected_role': selected_role,
+        'freshness': freshness,
     }
+
 
     return render(request, 'findJob.html', context)
 
 
 
-@login_required(login_url='../account/login')
-def save_post(request, post_id):
-    if request.user.is_hirer:
-        return redirect('home')
-
-    user_job_seeker = JobSeeker.objects.get(user=request.user)
-    post = HirerPost.objects.get(id=post_id)
-
-    previous_url = request.META.get('HTTP_REFERER', None)
-
-    user_job_seeker.saved_posts.add(post)
-    
-    return redirect(previous_url)
-
-
-@login_required(login_url='../account/login')
-def unsave_post(request, post_id):
-    if request.user.is_hirer:
-        return redirect('home')
-
-    user_job_seeker = JobSeeker.objects.get(user=request.user)
-    post = HirerPost.objects.get(id=post_id)
-
-
-    user_job_seeker.saved_posts.remove(post)
-    previous_url = request.META.get('HTTP_REFERER', None)
-    
-    return redirect(previous_url)
-
-# hererererererrre
 @login_required(login_url='../account/login')
 def save_unsave_post(request, post_id):
     user_job_seeker = JobSeeker.objects.get(user=request.user)
@@ -343,15 +614,12 @@ def save_unsave_post(request, post_id):
         user_job_seeker.saved_posts.remove(post)
         saved = False
     else:
-        # Job seeker has not saved the post, so save it
         user_job_seeker.saved_posts.add(post)
         saved = True
 
-    # Return a JSON response indicating success and the updated save status
     data = {'saved': saved}
     return JsonResponse(data)
 
-# hererererererrre
 
 
 @login_required(login_url='../account/login')
@@ -402,3 +670,25 @@ def applied_job(request):
     }
 
     return render(request, 'savedNappliedPosts.html', context)
+
+@login_required(login_url='../account/login')
+def get_location_suggestions(request):
+    locationInput = request.GET.get('locationInput', '')
+    
+    suggestions = [item for item in LOCATION_CHOICES if locationInput.lower() in item.lower()]
+    return JsonResponse({'suggestions': suggestions})
+
+
+
+
+def job_recommendations(request):
+    user_profile = JobSeeker.objects.get(user=request.user) 
+    
+    content_based_recommendation = SkillsBasedRecommendation(HirerPost.objects.all())
+    
+    
+    recommended_jobs = content_based_recommendation.recommend_jobs(user_profile)
+    
+    context = {'recommended_jobs': recommended_jobs}
+    print(recommended_jobs)
+    return render(request, 'recom.html', context)

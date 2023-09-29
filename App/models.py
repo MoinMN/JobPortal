@@ -296,4 +296,6 @@ class JobApplication(models.Model):
     applicant = models.ForeignKey(JobSeeker, on_delete=models.CASCADE)
     resume = models.FileField(upload_to='resumes/')
     applied_date = models.DateTimeField(auto_now_add=True)
-    response = models.CharField(choices=[(choice, choice) for choice in APPLICATION_RESPONSE_CHOICES], max_length=100, null=True, blank=True, default=None)
+    response = models.CharField(choices=[(choice, choice) for choice in APPLICATION_RESPONSE_CHOICES], max_length=100, null=True, blank=True, default='None')
+
+    

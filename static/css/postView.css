@@ -411,6 +411,7 @@ hr {
     align-items: center;
     font-size: 1.1rem;
     border-radius: 12px;
+    border: 2px solid rgb(0, 85, 255);
     overflow-x: hidden;
     overflow-y: auto;
 }
@@ -595,4 +596,9 @@ table tr td select {
 .box-six h3 {
     font-size: 1.2rem;
     margin: 20px 0;
+}
+
+.response-box p {
+    text-align: center;
+    line-height: 3em;
 }

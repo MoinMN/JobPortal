@@ -14,6 +14,8 @@ EXPERIENCE_CHOICES = [
 LOCATION_CHOICES = [
     "Mumbai",
     "Delhi",
+    "Chiplun",
+    "Navi Mumbai",
     "Bengaluru",
     "Ahmedabad",
     "Hyderabad",
@@ -1227,7 +1229,6 @@ LOCATION_CHOICES = [
     "Warud",
     "Asarganj",
     "Sarsod",
-    "Chiplun",
 ]
 
 
@@ -1446,7 +1447,6 @@ DEPARTMENT_CHOICES = [
     "Data Analysis",
     "Engineering",
     "Facilities",
-    "Finance",
     "Human Resources",
     "Information Technology",
     "Legal",

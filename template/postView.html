@@ -237,15 +237,16 @@
                             <button id="mainSubmit" type="submit" hidden>Submit</button>
                         </form>
                     </table>
-                    {% if job_application is empty %}
+                    {% if not job_application %}
                     <div class="response-box">
                         <p>No Responses Yet</p>
                     </div>
-                    {% endif %}
+                    {% else %}
                     <div class="btn">
                         <button id="print">Print</button>
                         <button type="submit" id="dummeSubmit">Submit Responses</button>
                     </div>
+                    {% endif %}
                 </div>
             </div>
             {% endif %}

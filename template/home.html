@@ -269,6 +269,10 @@
         .incomplete-content .incomplete-box i{
             padding: 0 5px;
         }
+        .searchContainer #location-suggestions {
+            right: 28%;
+            top: 270px;
+        }
     </style>
 </head>
 
@@ -280,11 +284,15 @@
     <h2 id="greeting-head">
         <span id="greeting"></span>
         {% if user_job_seeker %}
-        <span class="greeting-user">{{user_job_seeker.user.name}}!</span>
+        <span class="greeting-user">{{user_job_seeker.user.name}}!</span><br>Find your job now👇
         {% else %}
         <span class="greeting-user">{{user_hirer.user.name}}!</span>
         {% endif %}
     </h2>
+
+    {% if request.user.is_jobseeker %}
+        {% include "searchBox.html" %}
+    {% endif %}
     
     <div class="container">
         <div class="profile-card">
@@ -400,84 +408,84 @@
 
 
             {% if user_job_seeker %}
-            <div class="dashboard">
-                <h3>Dashboard</h3>
-                <div class="dashboard-box-content">
-                    <div class="dashboard-box">
-                        <h4>Total Applied Jobs</h4>
-                        <span>{{job_application|length}}</span>
-                    </div>
-                    <div class="dashboard-box">
-                        <h4>Total Hirer Contacted</h4>
-                        <span>-</span>
-                    </div>
-                    <div class="dashboard-box">
-                        <h4>Total Hired</h4>
-                        <span>-</span>
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="recommendation">
-                <div class="recommended-head">
-                    <h3>Recommended Jobs</h3>
-                    <a href=""><span>View all</span></a>
-                </div>
-                <div class="recommendation-box-content">
-                    <div class="recommendation-box">
-                        <div class="box-head">
-                            <img src="{{user_job_seeker.profile_image.url}}" alt="Company Image" width="65" height="50">
-                            <span>23h ago</span>
+                <div class="dashboard">
+                    <h3>Dashboard</h3>
+                    <div class="dashboard-box-content">
+                        <div class="dashboard-box">
+                            <h4>Total Applied Jobs</h4>
+                            <span>{{job_applications|length}}</span>
                         </div>
-                        <div class="box-content">
-                            <h3>Subject</h3>
-                            <span>Company Name</span>
-                            <p>Country Name</p>
+                        <div class="dashboard-box">
+                            <h4>Total Response Pending</h4>
+                            <span>{{pending_response}}</span>
+                        </div>
+                        <div class="dashboard-box">
+                            <h4>Total Response Received</h4>
+                            <span>{{received_response}}</span>
                         </div>
                     </div>
                 </div>
-            </div>
+
+
+                <div class="recommendation">
+                    <div class="recommended-head">
+                        <h3>Recommended Jobs</h3>
+                        <a href=""><span>View all</span></a>
+                    </div>
+                    <div class="recommendation-box-content">
+                        <div class="recommendation-box">
+                            <div class="box-head">
+                                <img src="{{user_job_seeker.profile_image.url}}" alt="Company Image" width="65" height="50">
+                                <span>23h ago</span>
+                            </div>
+                            <div class="box-content">
+                                <h3>Subject</h3>
+                                <span>Company Name</span>
+                                <p>Country Name</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
             {% else %}
 
-            <div class="dashboard">
-                <h3>Dashboard</h3>
-                <div class="dashboard-box-content">
-                    <div class="dashboard-box">
-                        <h4>Total Jobs Posted</h4>
-                        <span>{{user_hirer_posts|length}}</span>
-                    </div>
-                    <div class="dashboard-box">
-                        <h4>Total Job Seekers Applied</h4>
-                        <span>{{num_applications}}</span>
-                    </div>
-                    <div class="dashboard-box">
-                        <h4>Total Hired</h4>
-                        <span>-</span>
+                <div class="dashboard">
+                    <h3>Dashboard</h3>
+                    <div class="dashboard-box-content">
+                        <div class="dashboard-box">
+                            <h4>Total Jobs Posted</h4>
+                            <span>{{user_hirer_posts|length}}</span>
+                        </div>
+                        <div class="dashboard-box">
+                            <h4>Total Job Seekers Applied</h4>
+                            <span>{{num_applications}}</span>
+                        </div>
+                        <div class="dashboard-box">
+                            <h4>Total Response Pending</h4>
+                            <span>{{pending_response}}</span>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="recommendation">
-                <div class="recommended-head">
-                    <h3>Recommended Job Seekers</h3>
-                    <a href=""><span>View all</span></a>
-                </div>
-                <div class="recommendation-box-content">
-                    <div class="recommendation-box">
-                        <div class="box-head">
-                            <img src="{{user_hirer.profile_image.url}}" alt="Company Image">
-                            <span>23h ago</span>
-                        </div>
-                        <div class="box-content">
-                            <h3>User name</h3>
-                            <span>skills</span>
-                            <p>country name</p>
+                <div class="recommendation">
+                    <div class="recommended-head">
+                        <h3>Recommended Job Seekers</h3>
+                        <a href=""><span>View all</span></a>
+                    </div>
+                    <div class="recommendation-box-content">
+                        <div class="recommendation-box">
+                            <div class="box-head">
+                                <img src="{{user_hirer.profile_image.url}}" alt="Company Image">
+                                <span>23h ago</span>
+                            </div>
+                            <div class="box-content">
+                                <h3>User name</h3>
+                                <span>skills</span>
+                                <p>country name</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
             {% endif %}
 
         </div>

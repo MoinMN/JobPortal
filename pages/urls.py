@@ -38,4 +38,10 @@ urlpatterns = [
     path('save_unsave_post/<int:post_id>', views.save_unsave_post, name='save_unsave_post'),
 
     path('profile/<str:username>', views.view_profile, name='view_profile'),
+
+    path('get_location_suggestions', views.get_location_suggestions, name='get_location_suggestions'),
+
+
+
+    path('recom', views.job_recommendations, name='job_recommendations'),
 ]
