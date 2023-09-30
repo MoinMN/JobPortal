@@ -1,55 +1,30 @@
-@import url('https://fonts.googleapis.com/css2?family=Croissant+One&family=Roboto&family=Ubuntu&display=swap');
-
-/* font-family: 'Croissant One', cursive; */
-/* font-family: 'Roboto', sans-serif; */
-/* font-family: 'Ubuntu', sans-serif; */
-* {
+*{
     padding: 0;
     margin: 0;
     box-sizing: border-box;
 }
 
-body {
-    background-color: #F8F9FA;
-}
-
-.background-blur {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    backdrop-filter: blur(5px);
-    z-index: 1;
-    display: none;
-}
-
 .container {
-    font-family: 'Roboto', sans-serif;
-    width: 65%;
-    margin: 45px auto;
-    padding: 18px 0;
+    margin: 15px auto;
+}
+
+.hero-content {
+    margin: 12px;
+}
+
+.hero-box {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 1em;
-    border-radius: 12px;
-    background-color: #FFFFFF;
-    transition: box-shadow 0.5s ease;
+    /* gap: 1em; */
 }
 
-.container:hover {
-    box-shadow: 0px 0px 40px 5px rgba(213, 213, 213, 0.753);
+.text-recommend {
+    color: orange;
 }
 
-.container h2 {
-    font-size: 2rem;
-    text-align: center;
-    margin: 6px 0;
-}
-
-.box-a {
+.hero-box a {
     text-decoration: none;
 }
 
@@ -61,6 +36,7 @@ body {
     background-color: #FFFFFF;
     width: 700px;
     padding: 24px 40px;
+    margin-bottom: 1em;
     cursor: pointer;
     transition: box-shadow 0.5s ease;
 }
@@ -77,12 +53,12 @@ body {
 .box-title h3 {
     color: black;
     font-size: 1.3rem;
-    line-height: 1.2em;
+    line-height: 1.1em;
 }
 
 .box-title h5 {
     color: black;
-    font-size: 1rem;
+    font-size: 1.1rem;
 }
 
 .box-img img {
@@ -139,50 +115,23 @@ body {
     gap: 1em;
 }
 
-.box-end .box-btn .update,
-.delete {
-    cursor: pointer;
-}
-
-.box-end .box-btn .update:hover {
-    color: rgb(0, 85, 255);
-}
-
-.box-end .box-btn .delete:hover {
-    color: red;
-}
-
 .box-end .box-btn a {
     text-decoration: none;
     color: #717B9E;
 }
 
-#job {
-    font-size: 1.2rem;
-    padding: 4px 10px;
-    background-color: rgb(0, 85, 255);
-    color: white;
+.box-end .box-btn .hide,
+.save,
+.unsave {
+    transition: color 500ms ease;
     cursor: pointer;
-    border: 1px solid grey;
-    border-radius: 12px;
 }
 
-#noPost {
-    font-size: 2rem;
+.box-end .box-btn .hide:hover,
+.save:hover {
+    color: rgb(0, 85, 255);
 }
 
-.posted{
-    color: #717B9E;
-}
-.save{
-    transition: color 500ms ease;
-}
-.save:hover{
-    color: #0055FF;
-}
-.unsave{
-    transition: color 500ms ease;
-}
-.unsave:hover{
+.unsave:hover {
     color: orange;
 }

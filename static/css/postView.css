@@ -527,6 +527,10 @@ table tr td a {
     color: black;
 }
 
+table tr td a:hover {
+    text-decoration: underline;
+}
+
 .background-blur {
     position: fixed;
     top: 0;
@@ -601,4 +605,39 @@ table tr td select {
 .response-box p {
     text-align: center;
     line-height: 3em;
+}
+
+.box-seven {
+    display: flex;
+    flex-direction: column;
+    border-radius: 12px;
+    border: 1px solid red;
+    background-color: rgb(255, 195, 83);
+    padding: 12px 20px;
+    transition: box-shadow 0.5s ease;
+    width: 500px;
+}
+
+.box-seven:hover {
+    box-shadow: 0px 0px 20px 2px rgba(213, 213, 213, 0.685);
+}
+
+.box-seven h4 {
+    font-size: 1.2rem;
+    margin: 20px 0;
+}
+
+.box-seven button {
+    background-color: rgb(0, 85, 255);
+    padding: 6px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    border: 2px solid rgb(0, 85, 255);
+    font-size: 1rem;
+    color: white;
+    transition: background-color 600ms ease;
+}
+
+.box-seven button:hover {
+    background-color: #2970fd;
 }

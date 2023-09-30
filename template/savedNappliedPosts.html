@@ -17,6 +17,11 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/myPost.css' %}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .container{
+            min-height: 45vh;
+        }
+    </style>
 </head>
 
 <body>
@@ -142,6 +147,10 @@
             {% endfor %}
         {% endif %}
     </div>
+
+
+    {% include "footer.html" %}
+
 
     {% load static %}
     <script src="{% static 'js/savedNappliedPosts.js' %}"></script>

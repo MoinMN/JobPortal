@@ -7,7 +7,7 @@ class SkillsBasedRecommendation:
         self.vectorizer = TfidfVectorizer(stop_words='english')
         self.job_post_matrix = self.vectorizer.fit_transform(job_posts.values_list('skills_requirement', flat=True))  # Use values_list to get a flat list of skills_requirement values
 
-    def recommend_jobs(self, user_profile, num_recommendations=5):
+    def recommend_jobs(self, user_profile, num_recommendations):
         user_profile_vector = self.vectorizer.transform([user_profile.skills])
         
         cosine_similarities = linear_kernel(user_profile_vector, self.job_post_matrix).flatten()

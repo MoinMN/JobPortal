@@ -1,7 +1,7 @@
 from nltk.tokenize import sent_tokenize
 from django.shortcuts import redirect, render, get_object_or_404
 from django.http import HttpResponseForbidden, JsonResponse
-from App.models import Hirer, JobSeeker, JobSeekerAddress, JobSeekerEducation, JobSeekerWorkExperience, HirerPost, HirerAddress, User, HirerSocialMedia, JobSeekerSocialMedia, JobApplication
+from App.models import Hirer, JobSeeker, JobSeekerAddress, JobSeekerEducation, JobSeekerWorkExperience, HirerPost, HirerAddress, User, HirerSocialMedia, JobSeekerSocialMedia, JobApplication, Notification
 from .models import ContactUs
 from django.contrib.auth.decorators import login_required
 from App.form import PostForm, ResponseChoice
@@ -11,6 +11,7 @@ from datetime import timedelta
 from django.utils import timezone
 from App.lists import LOCATION_CHOICES
 from .recommendation import SkillsBasedRecommendation
+from django.contrib.contenttypes.models import ContentType
 
 
 
@@ -83,6 +84,15 @@ def view_profile(request, username):
 
 @login_required(login_url='../account/login')
 def home(request):
+    user_content_type = ContentType.objects.get_for_model(request.user)
+
+    user_notifications  = Notification.objects.filter(
+        receiver_content_type=user_content_type,
+        receiver_object_id=request.user.id,
+        read = False
+    ).order_by('-created_at')
+
+
     if request.user.is_jobseeker:
         user = User.objects.get(id=request.user.id)
         user_job_seeker = JobSeeker.objects.get(user=request.user)
@@ -114,8 +124,22 @@ def home(request):
         percentage_user = (user_completeness_percentage + completeness_percentage_user_job_seeker + completeness_percentage_user_job_seeker_address +
                            completeness_percentage_user_job_seeker_first_education ) / 4
         
+        user_profile = JobSeeker.objects.get(user=request.user) 
+        recommended_jobs = ''
+        if HirerPost.objects.all():
+            content_based_recommendation = SkillsBasedRecommendation(HirerPost.objects.all())    
+        
+            recommended_jobs = content_based_recommendation.recommend_jobs(user_profile, 6)
+
+
+
+        
         context = {
+            'user_notifications': user_notifications,
+
             'job_applications': job_applications,
+
+            'recommended_jobs': recommended_jobs,
 
             'user_job_seeker': user_job_seeker,
             'user_job_seeker_address': user_job_seeker_address,
@@ -148,7 +172,6 @@ def home(request):
             except JobApplication.DoesNotExist:
                 print('JobApplication DoesNotExist')
 
-
         
         user_completeness_percentage = user.calculate_user_completeness()
         completeness_percentage_user_hirer = user_hirer.calculate_hirer_completeness()
@@ -159,6 +182,8 @@ def home(request):
         percentage_user = (user_completeness_percentage + completeness_percentage_user_hirer + completeness_percentage_user_hirer_address) / 3
 
         context = {
+            'user_notifications': user_notifications,
+
             'user_hirer': user_hirer,
             'user_hirer_address': user_hirer_address,
 
@@ -180,6 +205,43 @@ def create_post(request):
     if request.user.is_jobseeker:
         return redirect('home')
     
+
+    user_content_type = ContentType.objects.get_for_model(request.user)
+
+    user_notifications  = Notification.objects.filter(
+        receiver_content_type=user_content_type,
+        receiver_object_id=request.user.id,
+        read = False
+    ).order_by('-created_at')
+
+
+    user = User.objects.get(id=request.user.id)
+    user_hirer = Hirer.objects.get(user=request.user)
+    user_hirer_address = HirerAddress.objects.filter(hirer=user_hirer).first()
+    user_hirer_posts = HirerPost.objects.filter(hirer_id=request.user.id).all()
+
+    num_applications, pending_response = 0, 0
+    for item in user_hirer_posts:
+        try:
+            job_application = JobApplication.objects.get(job_post=item.id)
+            if job_application:
+                num_applications += 1
+            
+                if job_application.response == 'None':
+                    pending_response += 1
+        except JobApplication.DoesNotExist:
+            print('JobApplication DoesNotExist')
+
+    
+    user_completeness_percentage = user.calculate_user_completeness()
+    completeness_percentage_user_hirer = user_hirer.calculate_hirer_completeness()
+    if user_hirer_address:
+        completeness_percentage_user_hirer_address = user_hirer_address.calculate_hireraddress_completeness()
+    else:
+        completeness_percentage_user_hirer_address = 0
+    percentage_user = (user_completeness_percentage + completeness_percentage_user_hirer + completeness_percentage_user_hirer_address) / 3
+
+    
     if request.method == 'POST':
         form = PostForm(request.POST)
         if form.is_valid():
@@ -190,13 +252,29 @@ def create_post(request):
     else:
         form = PostForm()
 
-    return render(request, 'createPost.html', {'form': form})
+    context = {
+        'percentage_user': percentage_user,
+
+        'user_notifications': user_notifications,
+
+        'form': form,
+    }
+
+    return render(request, 'createPost.html', context)
 
 
 @login_required(login_url='../account/login')
 def update_post(request, post_id):
     if request.user.is_jobseeker:
         return redirect('home')
+    
+    user_content_type = ContentType.objects.get_for_model(request.user)
+
+    user_notifications  = Notification.objects.filter(
+        receiver_content_type=user_content_type,
+        receiver_object_id=request.user.id,
+        read = False
+    ).order_by('-created_at')
     
     post = get_object_or_404(HirerPost, id=post_id)
 
@@ -211,7 +289,12 @@ def update_post(request, post_id):
     else:
         form = PostForm(instance=post)
 
-    return render(request, 'createPost.html', {'form': form})
+    context = {
+        'form': form,
+        'user_notifications': user_notifications,
+    }
+
+    return render(request, 'createPost.html', context)
 
 
 @login_required(login_url='../account/login')
@@ -230,6 +313,14 @@ def delete_post(request, post_id):
 
 @login_required(login_url='../account/login')
 def post_view(request, post_id):    
+    user_content_type = ContentType.objects.get_for_model(request.user)
+
+    user_notifications  = Notification.objects.filter(
+        receiver_content_type=user_content_type,
+        receiver_object_id=request.user.id,
+        read = False
+    ).order_by('-created_at')
+
     post = get_object_or_404(HirerPost, id=post_id)
 
     if JobApplication.objects.filter(applicant=request.user.id, job_post=post_id).exists():
@@ -254,6 +345,9 @@ def post_view(request, post_id):
                 application = JobApplication.objects.get(pk=item.id)
                 application.response = result
                 application.save()
+                send_response_notification(application.applicant.user, application.job_post.hirer, application.job_post, application.response)
+                # def send_response_notification(job_seeker, hirer, job_post, response_message):
+                
             
             return redirect('view-post', post_id)
 
@@ -275,7 +369,16 @@ def post_view(request, post_id):
     purposeDatas = sent_tokenize(purpose)
 
     highlightDatas = sent_tokenize(highlight)
+
+    new_context = request.session.pop('new_context', {})
+
+    message = new_context.get('message', None)
+
     context = {
+        'user_notifications': user_notifications,
+
+        'message': message,
+
         'post': post,
 
         'user_job_seeker': user_job_seeker,
@@ -303,12 +406,23 @@ def my_post(request):
     if request.user.is_jobseeker:
         return redirect('home')
     
+    user_content_type = ContentType.objects.get_for_model(request.user)
+
+    user_notifications  = Notification.objects.filter(
+        receiver_content_type=user_content_type,
+        receiver_object_id=request.user.id,
+        read = False
+    ).order_by('-created_at')
+
+
     posts = HirerPost.objects.filter(hirer_id=request.user.id).all()
     
     if posts.exists() == False:
         posts = False
 
     context = {
+        'user_notifications': user_notifications,
+
         'posts': posts,
     }
 
@@ -319,6 +433,14 @@ def my_post(request):
 def find_job(request):
     if request.user.is_hirer:
         return redirect('home')
+    
+    user_content_type = ContentType.objects.get_for_model(request.user)
+
+    user_notifications  = Notification.objects.filter(
+        receiver_content_type=user_content_type,
+        receiver_object_id=request.user.id,
+        read = False
+    ).order_by('-created_at')
 
     posts = HirerPost.objects.all()
     user_job_seeker = JobSeeker.objects.get(user=request.user)
@@ -551,9 +673,16 @@ def find_job(request):
             if searchLocationResults:
                 is_filter = True
 
-
+    user_profile = JobSeeker.objects.get(user=request.user) 
+    recommended_jobs = ''
+    if HirerPost.objects.all():
+        content_based_recommendation = SkillsBasedRecommendation(HirerPost.objects.all())    
+        
+        recommended_jobs = content_based_recommendation.recommend_jobs(user_profile, 3)
 
     context = {
+        'user_notifications': user_notifications,
+
         'posts': posts,
         'user_job_seeker': user_job_seeker,
 
@@ -571,6 +700,8 @@ def find_job(request):
         'salary_counts': salary_counts,
 
         'is_filter': is_filter,
+
+        'recommended_jobs': recommended_jobs,
 
 
         'keywordInput': keywordInput,
@@ -627,10 +758,20 @@ def view_saved_post(request):
     if request.user.is_hirer:
         return redirect('home')
     
+    user_content_type = ContentType.objects.get_for_model(request.user)
+
+    user_notifications  = Notification.objects.filter(
+        receiver_content_type=user_content_type,
+        receiver_object_id=request.user.id,
+        read = False
+    ).order_by('-created_at')
+    
     user_job_seeker = JobSeeker.objects.get(user=request.user)
     posts =  user_job_seeker.saved_posts.all()
 
     context = {
+        'user_notifications': user_notifications,
+
         'posts': posts,
         'user_job_seeker': user_job_seeker,
     }
@@ -643,11 +784,56 @@ def apply_job(request, post_id):
     if request.user.is_hirer:
         return redirect('home')
     
+    user = User.objects.get(id=request.user.id)
+    user_job_seeker = JobSeeker.objects.get(user=request.user)
+    user_job_seeker_address = JobSeekerAddress.objects.filter(jobSeeker=user_job_seeker).first()
+    job_applications = JobApplication.objects.filter(applicant=user_job_seeker)
+
+    pending_response, received_response = 0, 0
+    for job_application in job_applications:
+        if job_application.response == 'None':
+            pending_response += 1
+        else:
+            received_response += 1
+
+    user_job_seeker_first_education = JobSeekerEducation.objects.filter(jobSeeker=user_job_seeker).first()
+    user_job_seeker_first_experience = JobSeekerWorkExperience.objects.filter(jobSeeker=user_job_seeker).first()
+
+    user_completeness_percentage = user.calculate_user_completeness()
+    completeness_percentage_user_job_seeker = user_job_seeker.calculate_jobseeker_completeness()
+    if user_job_seeker_address:
+        completeness_percentage_user_job_seeker_address = user_job_seeker_address.calculate_jobseekeraddress_completeness()
+    else:
+        completeness_percentage_user_job_seeker_address = 0
+
+    if user_job_seeker_first_education:
+        completeness_percentage_user_job_seeker_first_education = user_job_seeker_first_education.calculate_jobseekereducation_completeness()
+    else:
+        completeness_percentage_user_job_seeker_first_education = 0
+
+    percentage_user = (user_completeness_percentage + completeness_percentage_user_job_seeker + completeness_percentage_user_job_seeker_address +
+                        completeness_percentage_user_job_seeker_first_education ) / 4
+    
+    if percentage_user != 100:
+        new_context = {'message': 'You need to complete profile to 100% then only you can apply for jobs.'}
+
+        # Save the context data to the session
+        request.session['new_context'] = new_context
+
+        # Redirect to the target view
+        return redirect('view-post', post_id)
+
+        # return render(request, 'postView.html', context)
+
     user_job_seeker = JobSeeker.objects.get(user=request.user)
     post = HirerPost.objects.get(id=post_id)
     
     jobApplication = JobApplication(applicant=user_job_seeker, job_post=post, resume=user_job_seeker.resume)
     jobApplication.save()
+
+    send_application_notification(post.hirer.user, user_job_seeker.user, post)
+    # def send_application_notification(hirer, job_seeker, job_post):
+
 
     previous_url = request.META.get('HTTP_REFERER', None)
 
@@ -659,12 +845,22 @@ def applied_job(request):
     if request.user.is_hirer:
         return redirect('home')
     
+    user_content_type = ContentType.objects.get_for_model(request.user)
+
+    user_notifications  = Notification.objects.filter(
+        receiver_content_type=user_content_type,
+        receiver_object_id=request.user.id,
+        read = False
+    ).order_by('-created_at')
+    
     user_job_seeker = JobSeeker.objects.get(user=request.user)
     job_application = JobApplication.objects.filter(applicant=user_job_seeker).all()
 
     saved_post = user_job_seeker.saved_posts.all()
 
     context = {
+        'user_notifications': user_notifications,
+
         'job_application': job_application,
         'saved_post': saved_post,
     }
@@ -682,13 +878,57 @@ def get_location_suggestions(request):
 
 
 def job_recommendations(request):
+    user_content_type = ContentType.objects.get_for_model(request.user)
+
+    user_notifications  = Notification.objects.filter(
+        receiver_content_type=user_content_type,
+        receiver_object_id=request.user.id,
+        read = False
+    ).order_by('-created_at')
+
+
     user_profile = JobSeeker.objects.get(user=request.user) 
     
-    content_based_recommendation = SkillsBasedRecommendation(HirerPost.objects.all())
+    content_based_recommendation = SkillsBasedRecommendation(HirerPost.objects.all())    
     
+    recommended_jobs = content_based_recommendation.recommend_jobs(user_profile, 9)
     
-    recommended_jobs = content_based_recommendation.recommend_jobs(user_profile)
+    context = {
+        'user_notifications': user_notifications,
+
+        'recommended_jobs': recommended_jobs    
+    }
     
-    context = {'recommended_jobs': recommended_jobs}
-    print(recommended_jobs)
-    return render(request, 'recom.html', context)
+    return render(request, 'recommendation.html', context)
+
+
+
+
+def send_application_notification(hirer, job_seeker, job_post):
+    message = f"Job seeker {job_seeker.name} applied for your job: {job_post.title}"
+    notification = Notification(sender=job_seeker, receiver=hirer, message=message, post=job_post)
+    notification.save()
+
+def send_response_notification(job_seeker, hirer, job_post, response_message):
+    message = f"Hirer {hirer.company_name} responded to your application for the job '{job_post.title}': {response_message}"
+    notification = Notification(sender=hirer, receiver=job_seeker, message=message, post=job_post)
+    notification.save()
+
+def mark_notification_as_read(request, notification_id):
+    try:
+        notification = Notification.objects.get(id=notification_id)
+        print(notification)
+        notification.read = True
+        notification.save()
+        print(notification.read)
+        return JsonResponse({'success': True})
+    except Notification.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Notification not found'})
+
+def delete_notification(request, notification_id):
+    try:
+        notification = Notification.objects.get(id=notification_id)
+        notification.delete()
+        return JsonResponse({'success': True})
+    except Notification.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Notification not found'})

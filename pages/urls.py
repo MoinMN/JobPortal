@@ -41,7 +41,9 @@ urlpatterns = [
 
     path('get_location_suggestions', views.get_location_suggestions, name='get_location_suggestions'),
 
+    path('recommendations', views.job_recommendations, name='recommendations'),
 
+    path('mark_notification_as_read/<int:notification_id>', views.mark_notification_as_read, name='mark_notification_as_read'),
+    path('delete_notification/<int:notification_id>', views.delete_notification, name='delete_notification'),
 
-    path('recom', views.job_recommendations, name='job_recommendations'),
 ]

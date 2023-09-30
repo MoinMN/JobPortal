@@ -37,7 +37,9 @@
                         <span><i class="fa-solid fa-location-dot"></i> {{post.location}}</span>
                     </div>
                 </div>
+
                 <hr>
+
                 <div class="box-end">
                     <div class="box-end-info">
                         <span>Posted: <p>{{post.created_at|timesince }} ago</p></span>
@@ -151,6 +153,13 @@
             </div>
         </div>
         <div class="container-content-two">
+            {% if message is not None %}
+                <div class="box-seven">
+                    <h4>{{message}}</h4>
+                    <a href="{% url 'profile' %}"><button>Complete Profile</button></a>
+                </div>
+            {% endif %}
+
             <div class="box-three">
                 <div class="job-highlight">
                     <h3>Job Highlights</h3>
@@ -171,6 +180,7 @@
                     </div>
                 </div>
             </div>
+
 
             {% if request.user.is_hirer %}
             <div class="box-five">
@@ -284,6 +294,10 @@
         </div>
     </div>
     {% include "applyJobAlert.html" %}
+
+
+    {% include "footer.html" %}
+
 
     <script src="{% static 'js/postView.js' %}"></script>
 </body>

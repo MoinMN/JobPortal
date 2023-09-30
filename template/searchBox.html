@@ -128,7 +128,7 @@
         <div id="location-suggestions">
             <ul id="location-suggestions-list"></ul>
         </div>
-        <button type="submit" class="show" id="searchSubmit"><i class="fa-solid fa-magnifying-glass"></i></button>
+        <button type="submit" class="show" id="searchSubmit">Search</button>
     </div>
 </form>
 
@@ -153,15 +153,5 @@
             }
         });
     });
-
-    setInterval(() => {
-        if (document.getElementById('searchSubmit').innerText == 'Search')   {
-            document.getElementById('searchSubmit').innerHTML = '<i class="fa-solid fa-magnifying-glass fa-bounce"></i>';
-            document.getElementById('searchSubmit').style.width = "60px"
-        }   else    {
-            document.getElementById('searchSubmit').innerText = 'Search';
-            document.getElementById('searchSubmit').style.width = "120px"
-        }
-    }, 2000);
 
 </script>

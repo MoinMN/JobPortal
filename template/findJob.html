@@ -8,263 +8,8 @@
     <script src="https://kit.fontawesome.com/437000937b.js" crossorigin="anonymous"></script>
     {% load static %}
     <link rel="shortcut icon" href="{% static 'img/favicon-bg.jpg' %}" type="image/x-icon">
+    <link rel="stylesheet" href="{% static 'css/findJob.css' %}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <style>
-        * {
-            padding: 0;
-            margin: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            background-color: #F8F9FA;
-        }
-
-        .container {
-            width: 90%;
-            margin: 0 auto;
-            padding: 18px 0;
-            display: flex;
-            justify-content: center;
-            align-items: start;
-            gap: 2em;
-            /* border-radius: 12px; */
-            /* background-color: #FFFFFF; */
-            /* transition: box-shadow 0.5s ease; */
-        }
-
-        /* .container h2 {
-            font-size: 2rem;
-            text-align: center;
-            margin: 6px 0;
-        } */
-
-        .filter {
-            background-color: #FFFFFF;
-            border-radius: 12px;
-            padding: 12px 20px;
-            width: 20%;
-            transition: box-shadow 0.5s ease;
-        }
-
-        .filter:hover {
-            box-shadow: 0px 0px 20px 2px rgba(213, 213, 213, 0.685);
-        }
-
-        .filter h2 {
-            margin-top: 12px;
-            margin-bottom: 6px;
-        }
-
-        .filter h3 {
-            font-size: 1.2rem;
-            margin-top: 12px;
-            margin-bottom: 6px;
-        }
-
-        .box-filter {
-            font-size: 1.1rem;
-            margin: 12px 0;
-        }
-
-        .box-filter label {
-            cursor: pointer;
-        }
-
-        .box-filter label span {
-            font-size: 1rem;
-            color: #717B9E;
-        }
-
-        .box-filter select,
-        option {
-            font-size: 1rem;
-            width: 100%;
-            padding: 2px 6px;
-            outline: none;
-            border-radius: 8px;
-            cursor: pointer;
-            background: transparent;
-        }
-
-        .filter hr {
-            border: 1px solid rgba(222, 222, 222, 0.5);
-        }
-
-        .box-filter-head {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .box-filter-head span {
-            font-size: 1rem;
-            margin-right: 20px;
-            cursor: pointer;
-        }
-
-        #loc-view-all,
-        #role-view-all,
-        #dept-view-all,
-        #loc-view-less,
-        #role-view-less,
-        #dept-view-less {
-            font-size: 1rem;
-            color: rgb(0, 85, 255);
-            cursor: pointer;
-            margin-left: 18px;
-        }
-
-        #loc-view-all:hover,
-        #role-view-all:hover,
-        #dept-view-all:hover,
-        #loc-view-less:hover,
-        #role-view-less:hover,
-        #dept-view-less:hover {
-            text-decoration: underline;
-        }
-
-        #all-department-content,
-        #all-location-content,
-        #all-role-content {
-            display: none;
-        }
-
-
-
-
-
-        .hero-box {
-            display: flex;
-            flex-direction: column;
-            /* gap: 1em; */
-        }
-
-        .hero-box a {
-            text-decoration: none;
-        }
-
-        .box {
-            display: flex;
-            flex-direction: column;
-            border-radius: 12px;
-            border: 1px solid rgba(190, 190, 190, 0.696);
-            background-color: #FFFFFF;
-            width: 700px;
-            padding: 24px 40px;
-            margin-bottom: 1em;
-            cursor: pointer;
-            transition: box-shadow 0.5s ease;
-        }
-
-        .box:hover {
-            box-shadow: 0px 0px 20px 2px rgba(213, 213, 213, 0.685);
-        }
-
-        .box-head {
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .box-title h3 {
-            color: black;
-            font-size: 1.3rem;
-            line-height: 1.1em;
-        }
-
-        .box-title h5 {
-            color: black;
-            font-size: 1.1rem;
-        }
-
-        .box-img img {
-            width: 60px;
-            height: 60px;
-            border-radius: 12px;
-        }
-
-        .box-list {
-            color: rgb(80, 80, 80);
-            font-size: 1rem;
-        }
-
-        .box-list-top {
-            display: flex;
-            gap: 2em;
-            line-height: 2em;
-        }
-
-        .box-list-top span i {
-            padding-right: 3px;
-        }
-
-        .box-list-top .rupee {
-            padding: 0 30px;
-            border-left: 1px solid rgb(223, 223, 223);
-            border-right: 1px solid rgb(223, 223, 223);
-        }
-
-        .box-list-bottom {
-            font-size: 1rem;
-        }
-
-        .box-list-bottom span i {
-            padding-right: 3px;
-        }
-
-        .box-content {
-            font-size: 0.9rem;
-            color: #717B9E;
-            line-height: 2em;
-        }
-
-        .box-end {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.8rem;
-            color: #717B9E;
-            line-height: 2em;
-        }
-
-        .box-end .box-btn {
-            display: flex;
-            gap: 1em;
-        }
-
-        .box-end .box-btn a {
-            text-decoration: none;
-            color: #717B9E;
-        }
-
-        .box-end .box-btn .hide,
-        .save,
-        .unsave {
-            transition: color 500ms ease;
-            cursor: pointer;
-        }
-
-        .box-end .box-btn .hide:hover,
-        .save:hover {
-            color: rgb(0, 85, 255);
-        }
-
-        .unsave:hover {
-            color: orange;
-        }
-        .noData{
-            background-color: #FFFFFF;
-            width: 50%;
-            border-radius: 12px;
-            text-align: center;
-        }
-        .noData:hover{
-            box-shadow: 0px 0px 20px 2px rgba(213, 213, 213, 0.685);
-        }
-        .noData h3{
-            font-size: 2rem;
-            margin: 120px 0;
-        }
-    </style>
 </head>
 
 <body>
@@ -1096,8 +841,63 @@
             {% endfor %}
         {% endif %}
 
+        {% if is_filter == False %}
+        {% for recom in recommended_jobs %}
+            <div class="hero-box">
+                <a href="{% url 'view-post' recom.id %}">
+                    <div class="box">
+                        <span class="text-recommend"><i class="fa-solid fa-star"></i> Recommended Job</span>
+                        <div class="box-head">
+                            <div class="box-title">
+                                <h3>{{recom.title}}</h3>
+                                <h5>{{recom.hirer.company_name}}</h5>
+                            </div>
+                            <div class="box-img">
+                                <img src="{{recom.hirer.profile_image.url}}" alt="Compnay Image">
+                            </div>
+                        </div>
+                        <div class="box-list">
+                            <div class="box-list-top">
+                                <span><i class="fa-solid fa-briefcase"></i> {{recom.experience}}</span>
+                                <span class="rupee"><i class="fa-solid fa-indian-rupee-sign"></i> {{recom.salary}}</span>
+                                <span><i class="fa-solid fa-location-dot"></i> {{recom.location}}</span>
+                            </div>
+                            <div class="box-list-bottom">
+                                <span><i class="fa-solid fa-newspaper"></i> {{recom.role}}</span>
+                            </div>
+                        </div>
+                        <div class="box-content">
+                            <span class="skills">{{recom.skills_requirement}}</span>
+                        </div>
+                </a>
+                <div class="box-end">
+                    <span>{{recom.created_at|timesince }} ago</span>
+                    <div class="box-btn">
+                        {% comment %}
+                        {% if recom in user_job_seeker.saved_posts.all %}
+                        <a href="{% url 'unsave-post' recom.id %}"><span class="unsave"><i class="fa-solid fa-bookmark"></i>
+                                Unsave</span></a>
+                        {% else %}
+                        <a href="{% url 'save-post' recom.id %}"><span class="save"><i class="fa-regular fa-bookmark"></i>
+                                Save</span></a>
+                        {% endif %}
+                        {% endcomment %}
+                        {% if recom in user_job_seeker.saved_posts.all %}
+                        <span data-post-id="{{recom.id}}" class="unsave save-unsave-button"><i
+                                class="fa-solid fa-bookmark"></i>
+                            Unsave</span>
+                        {% else %}
+                        <span data-post-id="{{recom.id}}" class="save save-unsave-button"><i
+                                class="fa-regular fa-bookmark"></i>
+                            Save</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        {% endif %}
 
-        {% if not is_filter %}          
+        {% if is_filter == False %}          
             {% for post in posts %}
                 <div class="hero-box">
                     <a href="{% url 'view-post' post.id %}">
@@ -1152,196 +952,16 @@
             {% endfor %}
         {% endif %}
 
-        {% if is_filter == 'run' %}
+        {% if is_filter == 'run' and not posts %}
             <div class="noData">
                 <h3>No Data Available!!!</h3>
             </div>
         {% endif %}
-
-
     </div>
 
-    <script>
-        let classSkills = document.querySelectorAll('.skills');
-
-        for (let i = 0; i < classSkills.length; i++) {
-            let result = '';
-            let skills = classSkills[i].innerHTML;
-            skill = skills.split(',');
-            for (let j = 0; j < skill.length; j++) {
-                result = result + skill[j] + " • ";
-            }
-            classSkills[i].innerHTML = result.slice(0, -2);
-        }
-
-        document.getElementById('dept-view-all').addEventListener("click", () => {
-            document.getElementById('all-department-content').style.display = 'block';
-            document.getElementById('dept-view-all').style.display = 'none';
-        });
-        document.getElementById('dept-view-less').addEventListener("click", () => {
-            document.getElementById('all-department-content').style.display = 'none';
-            document.getElementById('dept-view-all').style.display = 'block';
-        });
-
-        document.getElementById('loc-view-all').addEventListener("click", () => {
-            document.getElementById('all-location-content').style.display = 'block';
-            document.getElementById('loc-view-all').style.display = 'none';
-        });
-        document.getElementById('loc-view-less').addEventListener("click", () => {
-            document.getElementById('all-location-content').style.display = 'none';
-            document.getElementById('loc-view-all').style.display = 'block';
-        });
-
-        document.getElementById('role-view-all').addEventListener("click", () => {
-            document.getElementById('all-role-content').style.display = 'block';
-            document.getElementById('role-view-all').style.display = 'none';
-        });
-        document.getElementById('role-view-less').addEventListener("click", () => {
-            document.getElementById('all-role-content').style.display = 'none';
-            document.getElementById('role-view-all').style.display = 'block';
-        });
-
-
-        document.getElementById('emp-angle-down').addEventListener("click", () => {
-            document.getElementById('emp-angle-down').querySelector('i').classList.toggle('fa-rotate-270');
-            if (document.getElementById('emp-angle-down').querySelector('i').classList.contains('fa-rotate-270')) {
-                document.querySelector('.employee-type-content').style.display = 'none';
-            } else {
-                document.querySelector('.employee-type-content').style.display = 'block';
-
-            }
-        });
-        document.getElementById('exp-angle-down').addEventListener("click", () => {
-            document.getElementById('exp-angle-down').querySelector('i').classList.toggle('fa-rotate-270');
-            if (document.getElementById('exp-angle-down').querySelector('i').classList.contains('fa-rotate-270')) {
-                document.querySelector('.experience-content').style.display = 'none';
-            } else {
-                document.querySelector('.experience-content').style.display = 'block';
-            }
-        });
-        document.getElementById('dept-angle-down').addEventListener("click", () => {
-            document.getElementById('dept-angle-down').querySelector('i').classList.toggle('fa-rotate-270');
-            if (document.getElementById('dept-angle-down').querySelector('i').classList.contains('fa-rotate-270')) {
-                document.querySelector('.top-department-content').style.display = 'none';
-                document.getElementById('all-department-content').style.display = 'none';
-            } else {
-                document.querySelector('.top-department-content').style.display = 'block';
-                document.getElementById('dept-view-all').style.display = 'block';
-            }
-        });
-        document.getElementById('loc-angle-down').addEventListener("click", () => {
-            document.getElementById('loc-angle-down').querySelector('i').classList.toggle('fa-rotate-270');
-            if (document.getElementById('loc-angle-down').querySelector('i').classList.contains('fa-rotate-270')) {
-                document.getElementById('top-location-content').style.display = 'none';
-                document.getElementById('all-location-content').style.display = 'none';
-            } else {
-                document.getElementById('top-location-content').style.display = 'block';
-                document.getElementById('loc-view-all').style.display = 'block';
-            }
-        });
-        document.getElementById('sly-angle-down').addEventListener("click", () => {
-            document.getElementById('sly-angle-down').querySelector('i').classList.toggle('fa-rotate-270');
-            if (document.getElementById('sly-angle-down').querySelector('i').classList.contains('fa-rotate-270')) {
-                document.querySelector('.salary-content').style.display = 'none';
-            } else {
-                document.querySelector('.salary-content').style.display = 'block';
-            }
-        });
-        document.getElementById('role-angle-down').addEventListener("click", () => {
-            document.getElementById('role-angle-down').querySelector('i').classList.toggle('fa-rotate-270');
-            if (document.getElementById('role-angle-down').querySelector('i').classList.contains('fa-rotate-270')) {
-                document.getElementById('top-role-content').style.display = 'none';
-                document.getElementById('all-role-content').style.display = 'none';
-            } else {
-                document.getElementById('top-role-content').style.display = 'block';
-                document.getElementById('role-view-all').style.display = 'block';
-            }
-        });
-
-        $(document).ready(function () {
-            $('.save-unsave-button').click(function () {
-                var postId = $(this).data('post-id');
-                var button = $(this);
-
-                $.ajax({
-                    url: '/save_unsave_post/' + postId,
-                    method: 'GET',
-                    success: function (data) {
-                        if (data.saved) {
-                            button.removeClass('save').addClass('unsave');
-                            button.html('<i class="fa-solid fa-bookmark"></i> Unsave');
-                        } else {
-                            button.removeClass('unsave').addClass('save');
-                            button.html('<i class="fa-regular fa-bookmark"></i> Save');
-                        }
-                    },
-                    error: function (error) {
-                        console.error('Ajax request failed:', error);
-                    }
-                });
-            });
-        });
-
-        document.querySelectorAll('.reamaining-department-box input').forEach((element)=>{
-            if (element.checked) {
-                document.getElementById('all-department-content').style.display = 'block';
-                document.getElementById('dept-view-all').style.display = 'none';
-            }
-        });
-        document.querySelectorAll('.remaining-location-box input').forEach((element)=>{
-            if (element.checked) {
-                document.getElementById('all-location-content').style.display = 'block';
-                document.getElementById('loc-view-all').style.display = 'none';
-            }
-        });
-        document.querySelectorAll('.remaining-role-box input').forEach((element)=>{
-            if (element.checked) {
-                document.getElementById('all-role-content').style.display = 'block';
-                document.getElementById('role-view-all').style.display = 'none';
-            }
-        });
-
-
-        document.addEventListener("DOMContentLoaded", function() {
-            // Get the form element
-            var form = document.getElementById("myForm");
-
-            // Add a submit event listener to the form
-            form.addEventListener("submit", function(event) {
-                // Prevent the default form submission behavior
-                event.preventDefault();
-
-                // Serialize the form data into a URL-encoded string
-                var formData = new FormData(form);
-
-                // Remove the CSRF token from the serialized data
-                formData.delete("csrfmiddlewaretoken");
-
-                // Construct the URL with the modified serialized data
-                var formDataString = new URLSearchParams(formData).toString();
-                var actionUrl = form.getAttribute("action");
-                var finalUrl = actionUrl + "?" + formDataString;
-
-                // Redirect to the constructed URL without actually submitting the form
-                window.location.href = finalUrl;
-            });
-        });
-
-
-        let radioInput = document.querySelectorAll('input[type="checkbox"]');
-        let freshnessInput = document.getElementById('freshness');
-        let myFilterSubmit = document.getElementById('filterSubmit');
-        radioInput.forEach((element)=>{
-            element.addEventListener("input", ()=>{
-                myFilterSubmit.click();
-            });
-        });
-
-        freshnessInput.addEventListener("input", ()=>{
-            myFilterSubmit.click();
-        });
-
-    </script>
+    
+    {% load static %}
+    <script src='{% static "js/findJob.js" %}'></script>
 </body>
 
 </html>

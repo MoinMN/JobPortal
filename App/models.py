@@ -1,7 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from .lists import EXPERIENCE_CHOICES, LOCATION_CHOICES, ROLE_CHOICES, DEPARTMENT_CHOICES, EMPLOYEE_CHOICES, APPLICATION_RESPONSE_CHOICES
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 from uuid import uuid4
+
 
 
 class User(AbstractUser):
@@ -43,14 +46,17 @@ class Hirer(models.Model):
 
         completed_fields = 0
 
-        if not self.company_name == 'None' or self.company_name:
-            completed_fields += 1
+        if not self.company_name == 'None':
+            if  not self.company_name.strip() == '':
+                completed_fields += 1
 
-        if not self.about_company == 'None' or self.about_company:
-            completed_fields += 1
+        if not self.about_company == 'None':
+            if  not self.about_company.strip() == '':
+                completed_fields += 1
 
         if not self.profile_image.name == 'profile_images/defaultProfileImage.png':
             completed_fields += 1
+
 
         return (completed_fields / total_fields) * 100
 
@@ -298,4 +304,23 @@ class JobApplication(models.Model):
     applied_date = models.DateTimeField(auto_now_add=True)
     response = models.CharField(choices=[(choice, choice) for choice in APPLICATION_RESPONSE_CHOICES], max_length=100, null=True, blank=True, default='None')
 
+
+
     
+class Notification(models.Model):
+    sender_content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, related_name='sender_notifications')
+    sender_object_id = models.PositiveIntegerField()
+    sender = GenericForeignKey('sender_content_type', 'sender_object_id')
+
+    receiver_content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, related_name='receiver_notifications')
+    receiver_object_id = models.PositiveIntegerField()
+    receiver = GenericForeignKey('receiver_content_type', 'receiver_object_id')
+
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    read = models.BooleanField(default=False)
+
+    post = models.ForeignKey(HirerPost, on_delete=models.CASCADE, null=True, blank=True)
+
+    def __str__(self):
+        return self.message
