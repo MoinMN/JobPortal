@@ -14,7 +14,7 @@
 ### Deployment Steps
 Please follow the below steps to run this project.
 1. Make sure your directory location is where the **manage.py** & **requirement.txt** is present.
-2. Now, to install dependencies run command `pip install -r requirements.txt`
+2. Now, to install dependencies run command `pip install -r requirement.txt`
 3. Now, to initialize the database run command `python manage.py makemigrations` followed
 by command `python manage.py migrate`
 5. Now, project is ready to run, run command `python manage.py runserver` the project will run on `http://127.0.0.1:8000`
