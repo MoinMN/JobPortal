@@ -29,6 +29,7 @@ by command `python manage.py migrate`
 1. [Django](https://www.djangoproject.com/)
 2. [SQLite3](https://www.sqlite.org/index.html)
 3. [JavaScript](https://www.javascript.com/)
+4. [Ajax](https://api.jquery.com/jquery.ajax/)
 
 
 ### References
