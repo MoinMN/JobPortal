@@ -4,9 +4,9 @@
 
 ### Project Members
 1. NAIK MOIN MOHAMMED  [ Team Leader ] 
-2. Shaikh Rafat Muskan Mohd Kamrealam 
-3. Patel Saquib Mansoor 
-3. Kumar Neeraj Arvind 
+2. SHAIKH RAFAT MUSKAN MOHD KAMREALAM 
+3. PATEL SAQUIB MANSOOR 
+4. KUMAR NEERAJ ARVIND 
 
 ### Project Guides
 1. PROF. RAMYA KANAGARAJ   [ Primary Guide ] 
