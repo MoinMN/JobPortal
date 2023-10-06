@@ -46,17 +46,18 @@ class Hirer(models.Model):
 
         completed_fields = 0
 
-        if not self.company_name == 'None':
-            if  not self.company_name.strip() == '':
-                completed_fields += 1
+        if self.company_name == 'None' or not self.company_name:
+            pass
+        else:
+            completed_fields += 1
 
-        if not self.about_company == 'None':
-            if  not self.about_company.strip() == '':
-                completed_fields += 1
+        if self.about_company == 'None' or not self.about_company:
+            pass
+        else:
+            completed_fields += 1
 
         if not self.profile_image.name == 'profile_images/defaultProfileImage.png':
             completed_fields += 1
-
 
         return (completed_fields / total_fields) * 100
 
@@ -239,12 +240,10 @@ class JobSeekerEducation(models.Model):
 
     def calculate_jobseekereducation_completeness(self):
         # Define the fields that are required for a complete profile
-        required_fields = ['school_name', 'degree',
-                           'field_of_study', 'start_date', 'end_date']
+        required_fields = ['school_name', 'degree', 'field_of_study', 'start_date', 'end_date']
 
         # Calculate the percentage of completed fields
-        completed_fields = sum(
-            1 for field in required_fields if self.field_is_complete(getattr(self, field)))
+        completed_fields = sum(1 for field in required_fields if self.field_is_complete(getattr(self, field)))
         total_fields = len(required_fields)
 
         # Calculate the percentage
@@ -272,12 +271,10 @@ class JobSeekerWorkExperience(models.Model):
 
     def calculate_jobseekerworkexperience_completeness(self):
         # Define the fields that are required for a complete profile
-        required_fields = ['company_name', 'position',
-                           'start_date', 'end_date', 'description']
+        required_fields = ['company_name', 'position', 'start_date', 'end_date', 'description']
 
         # Calculate the percentage of completed fields
-        completed_fields = sum(
-            1 for field in required_fields if self.field_is_complete(getattr(self, field)))
+        completed_fields = sum(1 for field in required_fields if self.field_is_complete(getattr(self, field)))
         total_fields = len(required_fields)
 
         # Calculate the percentage

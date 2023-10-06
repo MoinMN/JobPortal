@@ -1233,6 +1233,7 @@ LOCATION_CHOICES = [
 
 
 ROLE_CHOICES = [
+    "Labour",
     "Information Technology",
     "Finance",
     "Sales",
@@ -1434,6 +1435,7 @@ ROLE_CHOICES = [
 
 
 DEPARTMENT_CHOICES = [
+    "Labour",
     "Accounting",
     "Administration",
     "Advertising",
