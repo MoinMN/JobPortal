@@ -186,8 +186,8 @@
                         <div class="role-box">
                             <input {% if role.role in selected_role %}
                               checked
-                            {% endif %} type="checkbox" value="{{role.role}}" name="role" id="{{role.role}}">
-                            <label for="{{role.role}}">{{role.role}} <span>({{role.count_role}})</span></label>
+                            {% endif %} type="checkbox" value="{{role.role}}" name="role" id="role-{{role.role}}">
+                            <label for="role-{{role.role}}">{{role.role}} <span>({{role.count_role}})</span></label>
                         </div>
                         {% endfor %}
                         {% if remaining_roles %}

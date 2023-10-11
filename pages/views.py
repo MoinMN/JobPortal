@@ -59,9 +59,10 @@ def view_profile(request, username):
             jobSeeker=user_job_seeker).all()
         user_job_seeker_experience = JobSeekerWorkExperience.objects.filter(
             jobSeeker=user_job_seeker).all()
-
+        
         context = {
             'user_job_seeker': user_job_seeker,
+            'skills': user_job_seeker.skills.split(','),
             'user_job_seeker_address': user_job_seeker_address,
             'user_job_seeker_education': user_job_seeker_education,
             'user_job_seeker_experience': user_job_seeker_experience,
@@ -163,14 +164,16 @@ def home(request):
         num_applications, pending_response = 0, 0
         for item in user_hirer_posts:
             try:
-                job_application = JobApplication.objects.get(job_post=item.id)
-                if job_application:
+                job_application = JobApplication.objects.filter(job_post=item.id)
+                for res in job_application:
                     num_applications += 1
                 
-                    if job_application.response == 'None':
+                    if res.response == 'None':
                         pending_response += 1
             except JobApplication.DoesNotExist:
                 print('JobApplication DoesNotExist')
+            # except JobApplication.MultipleObjectsReturned:
+            #     print('JobApplication MultipleObjectsReturned')
 
         
         user_completeness_percentage = user.calculate_user_completeness()
@@ -223,14 +226,16 @@ def create_post(request):
     num_applications, pending_response = 0, 0
     for item in user_hirer_posts:
         try:
-            job_application = JobApplication.objects.get(job_post=item.id)
-            if job_application:
+            job_application = JobApplication.objects.filter(job_post=item.id)
+            for res in job_application:
                 num_applications += 1
             
-                if job_application.response == 'None':
+                if res.response == 'None':
                     pending_response += 1
         except JobApplication.DoesNotExist:
             print('JobApplication DoesNotExist')
+        # except JobApplication.MultipleObjectsReturned:
+        #     print('JobApplication MultipleObjectsReturned')
 
     
     user_completeness_percentage = user.calculate_user_completeness()
@@ -268,6 +273,20 @@ def update_post(request, post_id):
     if request.user.is_jobseeker:
         return redirect('home')
     
+    user = User.objects.get(id=request.user.id)
+    user_hirer = Hirer.objects.get(user=request.user)
+    user_hirer_address = HirerAddress.objects.filter(hirer=user_hirer).first()
+    user_hirer_posts = HirerPost.objects.filter(hirer_id=request.user.id).all()
+
+    user_completeness_percentage = user.calculate_user_completeness()
+    completeness_percentage_user_hirer = user_hirer.calculate_hirer_completeness()
+    if user_hirer_address:
+        completeness_percentage_user_hirer_address = user_hirer_address.calculate_hireraddress_completeness()
+    else:
+        completeness_percentage_user_hirer_address = 0
+    percentage_user = (user_completeness_percentage + completeness_percentage_user_hirer + completeness_percentage_user_hirer_address) / 3
+
+    
     user_content_type = ContentType.objects.get_for_model(request.user)
 
     user_notifications  = Notification.objects.filter(
@@ -277,6 +296,8 @@ def update_post(request, post_id):
     ).order_by('-created_at')
     
     post = get_object_or_404(HirerPost, id=post_id)
+
+    
 
     if request.user != post.hirer.user:
         return HttpResponseForbidden("You do not have permission to edit this post.")
@@ -290,6 +311,7 @@ def update_post(request, post_id):
         form = PostForm(instance=post)
 
     context = {
+        'percentage_user': percentage_user,
         'form': form,
         'user_notifications': user_notifications,
     }

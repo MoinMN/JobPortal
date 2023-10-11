@@ -17,7 +17,6 @@
                 <li><a href="{% url 'home' %}">Home</a></li>
                 <li><a href="{% url 'post-job' %}">Post Job</a></li>
                 <li><a href="{% url 'my-post' %}">My Posts</a></li>
-                <li><a href="#">Contact</a></li>
             </ul>
         {% endif %}
     </div>
@@ -46,7 +45,7 @@
                                 <p>{{item.message}}</p>
                             </a>
                             <div class="btn">
-                                <div class="delete" data-notification-delete-id="{{ item.id }}">Delete</div>
+                                <div class="ntf-delete" data-notification-delete-id="{{ item.id }}">Delete</div>
                                 <div class="mark-as-read" data-notification-id="{{ item.id }}">Mark as read</div>
                             </div>
                         </div>
@@ -104,7 +103,7 @@
     });
 
     $(document).ready(function() {
-        $('.delete').click(function() {
+        $('.ntf-delete').click(function() {
             var notificationId = $(this).data('notification-delete-id');
             var button = $(this);
             $.ajax({
